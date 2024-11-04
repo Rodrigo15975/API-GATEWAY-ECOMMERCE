@@ -1,0 +1,24 @@
+const enum PATTERNAME {
+  CATEGORY_CREATE = 'category.create',
+  CATEGORY_CREATE_MANY = 'category.create.many',
+  CATEGORY_UPDATE = 'category.update',
+  CATEGORY_DELETE = 'category.delete',
+}
+
+type MessagePattern = {
+  [K in keyof typeof PATTERNAME]: (typeof PATTERNAME)[K]
+}
+
+const patterNameWrite: MessagePattern = {
+  CATEGORY_CREATE: PATTERNAME.CATEGORY_CREATE,
+  CATEGORY_CREATE_MANY: PATTERNAME.CATEGORY_CREATE_MANY,
+  CATEGORY_UPDATE: PATTERNAME.CATEGORY_UPDATE,
+  CATEGORY_DELETE: PATTERNAME.CATEGORY_DELETE,
+}
+
+export const {
+  CATEGORY_CREATE,
+  CATEGORY_UPDATE,
+  CATEGORY_DELETE,
+  CATEGORY_CREATE_MANY,
+} = patterNameWrite
