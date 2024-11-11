@@ -35,6 +35,5 @@ export class AppModule {
         },
       )
       .forRoutes('*')
-      
   }
 }

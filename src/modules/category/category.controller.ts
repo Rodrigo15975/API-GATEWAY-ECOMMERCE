@@ -1,19 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common'
-import { CategoryService } from './category.service'
-import {
-  CreateCategoryDto,
-  CreateCategoryManyDto,
-} from './dto/create-category.dto'
-import { UpdateCategoryDto } from './dto/update-category.dto'
+import { ApiTags } from '@nestjs/swagger'
 import {
   ADMIN,
   DEV,
@@ -22,7 +17,18 @@ import {
   RolesDefault,
 } from 'src/decorators/role.decorator'
 import { RolesGuard } from 'src/guards/roles.guard'
+import { CategoryService } from './category.service'
+import {
+  CreateCategoryDto,
+  CreateCategoryManyDto,
+  CreateDiscountRulesCategory,
+} from './dto/create-category.dto'
+import {
+  UpdateCategoryDto,
+  UpdateDiscountCategoryDto,
+} from './dto/update-category.dto'
 
+@ApiTags('MICROSERVICES-CATEGORY')
 @Controller('category')
 @UseGuards(RolesGuard)
 @RolesDefault([ADMIN, DEV, EMPLOYEE])
@@ -38,6 +44,14 @@ export class CategoryController {
     return this.categoryService.createMany(createCategoryDto)
   }
 
+  @Post('discount/:id')
+  createDiscount(
+    @Param('id') id: string,
+    @Body() createDiscountRulesCategory: CreateDiscountRulesCategory,
+  ) {
+    return this.categoryService.createDiscount(+id, createDiscountRulesCategory)
+  }
+
   @Get()
   findAll() {
     return this.categoryService.findAll()
@@ -50,9 +64,20 @@ export class CategoryController {
   ) {
     return this.categoryService.update(+id, updateCategoryDto)
   }
+  @Patch('discount/:id')
+  updateDiscount(
+    @Param('id') id: string,
+    @Body() updateCategoryDto: UpdateDiscountCategoryDto,
+  ) {
+    return this.categoryService.updateDiscount(+id, updateCategoryDto)
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.categoryService.remove(+id)
+  }
+  @Delete('discount/:id')
+  deleteDiscount(@Param('id') id: string) {
+    return this.categoryService.removeDiscount(+id)
   }
 }

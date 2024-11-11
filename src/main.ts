@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
+import { HttpExceptionFilter } from './common/catch.exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -21,8 +22,9 @@ async function bootstrap() {
     // allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
-  // app.useGlobalFilters(new RpcExceptionFilter())
-
+  // forma de usar el exceptio filter de manera global
+  // tambien lo puedes usar en el controller solitario
+  app.useGlobalFilters(new HttpExceptionFilter())
   await app.listen(4000)
 }
 bootstrap()

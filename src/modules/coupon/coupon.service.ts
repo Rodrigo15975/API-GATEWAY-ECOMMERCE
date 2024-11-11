@@ -1,13 +1,20 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
+import { firstValueFrom } from 'rxjs'
+import { COUPON_CREATE } from './common/patterNameWrite'
+import { proxyName } from './common/proxyName'
 import { CreateCouponDto } from './dto/create-coupon.dto'
 import { UpdateCouponDto } from './dto/update-coupon.dto'
-import { proxyName } from './common/proxyName'
-import { ClientProxy } from '@nestjs/microservices'
-import { COUPON_CREATE } from './common/patterNameWrite'
-import { firstValueFrom } from 'rxjs'
 
 @Injectable()
 export class CouponService {
+  private readonly logger: Logger = new Logger(CouponService.name)
   constructor(
     @Inject(proxyName.name) private readonly couponClient: ClientProxy,
   ) {}
@@ -18,8 +25,11 @@ export class CouponService {
         this.couponClient.send(COUPON_CREATE, createCouponDto),
       )
     } catch (error) {
-      console.log(error)
-      throw new BadRequestException(error)
+      this.logger.error(error)
+      throw new HttpException(
+        error.message || 'Internal Server Error',
+        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+      )
     }
   }
 
