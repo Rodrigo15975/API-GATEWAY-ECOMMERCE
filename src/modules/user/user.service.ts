@@ -55,7 +55,7 @@ export class UserService {
     try {
       return await firstValueFrom(this.userClient.send(USER_FIND_ONE_READ, id))
     } catch (error) {
-         this.logger.error(error)
+      this.logger.error(error)
       throw new HttpException(
         error.message || 'Internal Server Error',
         error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -69,7 +69,7 @@ export class UserService {
         this.userClient.send(USER_UPDATE, { ...updateUserDto, id }),
       )
     } catch (error) {
-         this.logger.error(error)
+      this.logger.error(error)
       throw new HttpException(
         error.message || 'Internal Server Error',
         error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -81,7 +81,7 @@ export class UserService {
     try {
       return await firstValueFrom(this.userClient.send(USER_REMOVE, id))
     } catch (error) {
-         this.logger.error(error)
+      this.logger.error(error)
       throw new HttpException(
         error.message || 'Internal Server Error',
         error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,

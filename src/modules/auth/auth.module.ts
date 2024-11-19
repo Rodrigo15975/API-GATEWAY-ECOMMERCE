@@ -3,17 +3,22 @@ import { ClientsModule, Transport } from '@nestjs/microservices'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { authPattern } from './common/auth.pattern'
+import { ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
+        imports: [AuthModule],
         name: authPattern.name,
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: 6379,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.REDIS,
+          options: {
+            host: configService.getOrThrow('REDIS_HOST'),
+            port: configService.getOrThrow('REDIS_PORT'),
+          },
+        }),
+        inject: [ConfigService],
       },
     ]),
   ],

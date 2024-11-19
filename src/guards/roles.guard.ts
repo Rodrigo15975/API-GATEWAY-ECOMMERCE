@@ -31,7 +31,6 @@ export class RolesGuard implements CanActivate {
   private static includeRoles(roles: string[], verifyRole: string) {
     const roleVerify = roles.some((role) => role === verifyRole)
 
-
     if (!roleVerify)
       throw new BadRequestException({
         message: 'Insufficient permissions',

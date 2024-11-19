@@ -1,19 +1,26 @@
 import { Module } from '@nestjs/common'
-import { RoleService } from './role.service'
-import { RoleController } from './role.controller'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { proxyName } from './common/proxyName/proxyName'
-
+import { RoleController } from './role.controller'
+import { RoleService } from './role.service'
 @Module({
   imports: [
-    ClientsModule.register([
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    ClientsModule.registerAsync([
       {
+        imports: [ConfigModule],
         name: proxyName.name,
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: 6379,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.REDIS,
+          options: {
+            host: configService.getOrThrow('REDIS_HOST'),
+            port: configService.getOrThrow('REDIS_PORT'),
+          },
+        }),
+        inject: [ConfigService],
       },
     ]),
   ],

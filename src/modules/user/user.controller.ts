@@ -9,7 +9,7 @@ import {
   Patch,
   Post,
   Req,
-  UseGuards,
+  // UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
@@ -21,12 +21,12 @@ import {
 } from 'src/decorators/role.decorator'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserService } from './user.service'
-import { RolesGuard } from 'src/guards/roles.guard'
+// import { RolesGuard } from 'src/guards/roles.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { GetProfileAhuthInterceptor } from 'src/interceptors/getProfile.auth.interceptor'
 
-@ApiTags('microservicio-user')
-@UseGuards(RolesGuard)
+@ApiTags('microservice-user')
+// @UseGuards(RolesGuard)
 @RolesDefault([ADMIN, DEV, EMPLOYEE])
 @Controller('user')
 export class UserController {
@@ -49,6 +49,7 @@ export class UserController {
   @UseInterceptors(GetProfileAhuthInterceptor)
   @Get('profile/token')
   getProfile(@Req() req: any) {
+    // return req.user;
     return { ...req.user }
   }
 

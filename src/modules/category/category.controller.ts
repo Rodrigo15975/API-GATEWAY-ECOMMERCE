@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
@@ -27,9 +28,11 @@ import {
   UpdateCategoryDto,
   UpdateDiscountCategoryDto,
 } from './dto/update-category.dto'
+import { HttpExceptionFilter } from 'src/common/catch.exception.filter'
 
 @ApiTags('MICROSERVICES-CATEGORY')
 @Controller('category')
+@UseFilters(HttpExceptionFilter)
 @UseGuards(RolesGuard)
 @RolesDefault([ADMIN, DEV, EMPLOYEE])
 export class CategoryController {

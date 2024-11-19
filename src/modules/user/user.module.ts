@@ -4,26 +4,37 @@ import { UserController } from './user.controller'
 import { proxyName } from './common/proxyName/proxyName'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { AuthModule } from '../auth/auth.module'
-
+import { ConfigModule, ConfigService } from '@nestjs/config'
 @Module({
   imports: [
     AuthModule,
-    ClientsModule.register([
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    ClientsModule.registerAsync([
       {
+        imports: [ConfigModule],
         name: proxyName.name_write,
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: 6379,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.REDIS,
+          options: {
+            port: configService.getOrThrow('REDIS_PORT'),
+            host: configService.getOrThrow('REDIS_HOST'),
+          },
+        }),
+        inject: [ConfigService],
       },
       {
+        imports: [ConfigModule],
         name: proxyName.name_read,
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: 6379,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.REDIS,
+          options: {
+            port: configService.getOrThrow('REDIS_PORT'),
+            host: configService.getOrThrow('REDIS_HOST'),
+          },
+        }),
+        inject: [ConfigService],
       },
     ]),
   ],

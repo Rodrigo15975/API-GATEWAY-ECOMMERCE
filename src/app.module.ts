@@ -33,6 +33,14 @@ export class AppModule {
           method: RequestMethod.GET,
           path: 'auth/verify-token/:token',
         },
+        {
+          path: 'user',
+          method: RequestMethod.POST,
+        },
+        {
+          path: 'role',
+          method: RequestMethod.POST,
+        },
       )
       .forRoutes('*')
   }
