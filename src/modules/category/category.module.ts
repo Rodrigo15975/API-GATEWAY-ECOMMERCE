@@ -4,25 +4,37 @@ import { AuthModule } from '../auth/auth.module'
 import { CategoryController } from './category.controller'
 import { CategoryService } from './category.service'
 import { proxyName } from './common/proxyName'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    ClientsModule.registerAsync([
       {
+        imports: [ConfigModule],
+        inject: [ConfigService],
         name: proxyName.nameWrite,
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: 6379,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.REDIS,
+          options: {
+            host: configService.getOrThrow('REDIS_HOST'),
+            port: configService.getOrThrow('REDIS_PORT'),
+          },
+        }),
       },
       {
+        imports: [ConfigModule],
+        inject: [ConfigService],
         name: proxyName.nameRead,
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: 6379,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.REDIS,
+          options: {
+            host: configService.getOrThrow('REDIS_HOST'),
+            port: configService.getOrThrow('REDIS_PORT'),
+          },
+        }),
       },
     ]),
     AuthModule,
@@ -30,6 +42,4 @@ import { proxyName } from './common/proxyName'
   controllers: [CategoryController],
   providers: [CategoryService],
 })
-export class CategoryModule {
-  
-}
+export class CategoryModule {}
