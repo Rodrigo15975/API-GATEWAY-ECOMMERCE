@@ -2,8 +2,8 @@ import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
-// import { HttpExceptionFilter } from './common/catch.exception.filter'
 import * as dotenv from 'dotenv'
+// import { HttpExceptionFilter } from './common/catch.exception.filter'
 dotenv.config()
 
 async function bootstrap() {
@@ -30,7 +30,11 @@ async function bootstrap() {
   // app.useGlobalFilters(new HttpExceptionFilter())
 
   const port = Number(process.env.API_GATEWAY_SERVICE_PORT) || 4000
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  )
 
   await app.listen(port, () => {
     console.log('listening on port ' + port)
