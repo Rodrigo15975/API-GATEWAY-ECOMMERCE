@@ -2,11 +2,12 @@ import { Inject, Injectable, Logger } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { firstValueFrom, timeout } from 'rxjs'
 import { ErrorHandlerService } from 'src/common/error-handler.service'
-import { PRODUCTS_CREATE } from './common/patternWrite'
+import { PRODUCTS_CREATE, PRODUCTS_REMOVE } from './common/patternWrite'
 import { proxyName } from './common/proxyName'
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
 import { handleObservableError } from 'src/common/handleObservableError'
+import { PRODUCTS_GET_ALL_READ } from './common/patternRead'
 // import { ImagesService } from './services/image.service'
 
 @Injectable()
@@ -36,8 +37,17 @@ export class ProductsService {
     }
   }
 
-  findAll() {
-    return `This action returns all products`
+  async findAll() {
+    try {
+      return await firstValueFrom(
+        this.clientProducts
+          .send(PRODUCTS_GET_ALL_READ, {})
+          .pipe(timeout(5000), handleObservableError(ProductsService.name)),
+      )
+    } catch (error) {
+      this.logger.error('Error get all PRODUCTS IN DB-READ', error)
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
   }
 
   findOne(id: number) {
@@ -50,7 +60,16 @@ export class ProductsService {
     return `This action updates a #${id} product`
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`
+  async remove(id: number) {
+    try {
+      return await firstValueFrom(
+        this.clientProducts
+          .send(PRODUCTS_REMOVE, id)
+          .pipe(timeout(5000), handleObservableError(ProductsService.name)),
+      )
+    } catch (error) {
+      this.logger.error('Error remove PRODUCT IN DB-WRITE', error)
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
   }
 }

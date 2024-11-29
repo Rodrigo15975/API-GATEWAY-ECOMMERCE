@@ -6,7 +6,7 @@ import {
   Logger,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom, lastValueFrom } from 'rxjs'
+import { firstValueFrom, lastValueFrom, timeout } from 'rxjs'
 import { CATEGORY_FIND_ALL_READ } from './common/patternRead'
 import {
   CATEGORY_CREATE,
@@ -27,6 +27,7 @@ import {
   UpdateCategoryDto,
   UpdateDiscountCategoryDto,
 } from './dto/update-category.dto'
+import { handleObservableError } from 'src/common/handleObservableError'
 @Injectable()
 export class CategoryService {
   private readonly logger = new Logger(CategoryService.name)
@@ -86,7 +87,9 @@ export class CategoryService {
   async findAll() {
     try {
       return firstValueFrom(
-        this.clientProductsRead.send(CATEGORY_FIND_ALL_READ, {}),
+        this.clientProductsRead
+          .send(CATEGORY_FIND_ALL_READ, {})
+          .pipe(timeout(5000), handleObservableError(CategoryService.name)),
       )
     } catch (error) {
       this.logger.error(error)
