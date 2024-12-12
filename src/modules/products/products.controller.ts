@@ -7,7 +7,7 @@ import {
   Param,
   Patch,
   Post,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common'
 import {
   ApiBody,
@@ -25,7 +25,7 @@ import {
   EMPLOYEE,
   RolesDefault,
 } from 'src/decorators/role.decorator'
-// import { RolesGuard } from 'src/guards/roles.guard'
+import { RolesGuard } from 'src/guards/roles.guard'
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
 import { ProductsService } from './products.service'
@@ -33,7 +33,7 @@ import { ProductDto } from './types/products'
 
 @ApiTags('microservice-products')
 @ApiCookieAuth('microservice-products')
-// @UseGuards(RolesGuard)
+@UseGuards(RolesGuard)
 @RolesDefault([ADMIN, DEV, EMPLOYEE])
 @Controller('products')
 export class ProductsController {

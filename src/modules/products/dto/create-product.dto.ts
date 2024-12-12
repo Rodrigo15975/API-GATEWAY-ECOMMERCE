@@ -6,7 +6,10 @@ import { ApiProperty } from '@nestjs/swagger'
 export class CreateProductDto {
   @ApiProperty({ type: ProductDto })
   @IsArray()
-  @ValidateNested({ each: true })
+  @ValidateNested({
+    each: true,
+    message: 'Required data products it is a array',
+  })
   @Type(() => ProductDto)
   products: ProductDto[]
 }

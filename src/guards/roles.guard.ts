@@ -25,6 +25,7 @@ export class RolesGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest()
 
     const payload = await this.authService.getCookiesPayloadToken(request)
+
     return RolesGuard.includeRoles(roles, payload.role)
   }
 

@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
   // UseFilters,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import {
@@ -17,7 +17,7 @@ import {
   // EMPLOYEE,
   RolesDefault,
 } from 'src/decorators/role.decorator'
-// import { RolesGuard } from 'src/guards/roles.guard'
+import { RolesGuard } from 'src/guards/roles.guard'
 import { CategoryService } from './category.service'
 import {
   CreateCategoryDto,
@@ -31,7 +31,7 @@ import {
 
 @ApiTags('MICROSERVICES-CATEGORY')
 @Controller('category')
-// @UseGuards(RolesGuard)
+@UseGuards(RolesGuard)
 @RolesDefault([ADMIN, DEV, EMPLOYEE])
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

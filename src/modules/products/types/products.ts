@@ -8,13 +8,14 @@ import {
   IsString,
   Max,
   Min,
+  IsOptional,
   ValidateNested,
 } from 'class-validator'
 import {
   MemoryStoredFile,
-  HasMimeType,
+  // HasMimeType,
   IsFile,
-  MaxFileSize,
+  // MaxFileSize,
 } from 'nestjs-form-data'
 
 export class ProductVariantDto {
@@ -24,24 +25,26 @@ export class ProductVariantDto {
 
   @ApiProperty({ type: 'binary' })
   @IsFile({ message: 'The file must be an archive' })
-  @MaxFileSize(1e6, { message: 'The maximum allowed size is 1MB' })
-  @HasMimeType(['image/jpeg', 'image/png'], {
-    message: 'Only JPEG or PNG images are allowed',
-  })
+  // @MaxFileSize(1e6, { message: 'The maximum allowed size is 1MB' })
+  // @HasMimeType(['image/jpeg', 'image/png'], {
+  //   message: 'Only JPEG or PNG images are allowed',
+  // })
   image: MemoryStoredFile
 
   url?: string
+
+  key_url?: string
 }
 
 export class ProductInventoryDto {
   @IsNotEmpty({ message: 'Minimum stock is required' })
-  @Transform(({ value }) => parseInt(value, 10)) // Transform string to number
+  @Transform(({ value }) => parseInt(value, 10))
   @IsNumber({}, { message: 'minStock must be a number' })
   @Min(0, { message: 'minStock must be at least 0' })
   minStock: number
 
   @IsNotEmpty({ message: 'Stock is required' })
-  @Transform(({ value }) => value === 'true') // Transform string to boolean
+  @Transform(({ value }) => value === 'true')
   @IsBoolean({ message: 'Stock must be a boolean' })
   stock: boolean
 }
@@ -57,7 +60,7 @@ export class ProductDto {
   productVariant: ProductVariantDto[]
 
   @IsNotEmpty({ message: 'Price is required' })
-  @Transform(({ value }) => parseFloat(value)) // Transform string to number
+  @Transform(({ value }) => parseFloat(value))
   @IsNumber({}, { message: 'Price must be a number' })
   @Min(0, { message: 'Price must be at least 0' })
   price: number
@@ -74,18 +77,18 @@ export class ProductDto {
   @IsString({ message: 'Brand must be a string' })
   brand: string
 
-  @IsNotEmpty({ message: 'Description is required' })
   @IsString({ message: 'Description must be a string' })
+  @IsOptional()
   description: string
 
   @IsNotEmpty({ message: 'Quantity is required' })
-  @Transform(({ value }) => parseInt(value, 10)) // Transform string to number
+  @Transform(({ value }) => parseInt(value, 10))
   @IsNumber({}, { message: 'Quantity must be a number' })
   @Min(0, { message: 'Quantity must be at least 0' })
   quantity: number
 
   @IsNotEmpty({ message: 'Is_new is required' })
-  @Transform(({ value }) => value === 'true') // Transform string to boolean
+  @Transform(({ value }) => value === 'true')
   @IsBoolean({ message: 'Is_new must be a boolean' })
   is_new: boolean
 
@@ -94,7 +97,7 @@ export class ProductDto {
   category: string
 
   @IsNotEmpty({ message: 'Discount is required' })
-  @Transform(({ value }) => parseFloat(value)) // Transform string to number
+  @Transform(({ value }) => parseFloat(value))
   @IsNumber({}, { message: 'Discount must be a number' })
   @Min(0, { message: 'Discount must be at least 0' })
   @Max(100, { message: 'Discount cannot exceed 100' })

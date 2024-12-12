@@ -3,16 +3,17 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   // HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Req,
-  // UseGuards,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiCookieAuth, ApiResponse, ApiTags } from '@nestjs/swagger'
 import {
   ADMIN,
   DEV,
@@ -21,18 +22,35 @@ import {
 } from 'src/decorators/role.decorator'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserService } from './user.service'
-// import { RolesGuard } from 'src/guards/roles.guard'
+import { RolesGuard } from 'src/guards/roles.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { GetProfileAhuthInterceptor } from 'src/interceptors/getProfile.auth.interceptor'
 
 @ApiTags('microservice-user')
-// @UseGuards(RolesGuard)
+@UseGuards(RolesGuard)
 @RolesDefault([ADMIN, DEV, EMPLOYEE])
 @Controller('user')
+@ApiCookieAuth('auth')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+      },
+      required: ['username', 'email', 'password'],
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User has been successfully created.',
+    type: CreateUserDto,
+  })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
