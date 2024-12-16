@@ -4,11 +4,17 @@ import { firstValueFrom, timeout } from 'rxjs'
 import { ErrorHandlerService } from 'src/common/error-handler.service'
 import { handleObservableError } from 'src/common/handleObservableError'
 import { PRODUCTS_GET_ALL_READ } from './common/patternRead'
-import { PRODUCTS_CREATE, PRODUCTS_REMOVE } from './common/patternWrite'
+import {
+  PRODUCTS_CREATE,
+  PRODUCTS_CREATE_ONE_VARIANT,
+  PRODUCTS_REMOVE,
+  PRODUCTS_REMOVE_URL,
+} from './common/patternWrite'
 import { proxyName } from './common/proxyName'
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
 import { ImagesService } from './services/image.service'
+import { CreateOneVariant, ProductVariantDto } from './types/products'
 
 @Injectable()
 export class ProductsService {
@@ -38,11 +44,12 @@ export class ProductsService {
 
   async findAll() {
     try {
+      // El segundo argumento es un objeto de configuración opcional.
       return await firstValueFrom(
         this.clientProducts
-          .send(PRODUCTS_GET_ALL_READ, {})
+          .send<ProductFindAll[]>(PRODUCTS_GET_ALL_READ, {})
           .pipe(timeout(5000), handleObservableError(ProductsService.name)),
-      )
+      ).then((data: ProductFindAll[]) => data)
     } catch (error) {
       this.logger.error('Error get all PRODUCTS IN DB-READ', error)
       throw ErrorHandlerService.handleError(error, ProductsService.name)
@@ -64,6 +71,53 @@ export class ProductsService {
       return await firstValueFrom(
         this.clientProducts
           .send(PRODUCTS_REMOVE, id)
+          .pipe(timeout(5000), handleObservableError(ProductsService.name)),
+      )
+    } catch (error) {
+      this.logger.error('Error remove PRODUCT IN DB-WRITE', error)
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
+  }
+  async createOneVariant(
+    id: number,
+    data: ProductVariantDto,
+    categorie: string,
+  ) {
+    const newVariant = await this.imagesServices.uploadVariantImage(
+      categorie,
+      data,
+    )
+
+    try {
+      return await firstValueFrom<string, CreateOneVariant>(
+        this.clientProducts.send<string, CreateOneVariant>(
+          PRODUCTS_CREATE_ONE_VARIANT,
+          { ...newVariant, id },
+        ),
+        {
+          defaultValue: {
+            color: '',
+            id: 0,
+            url: '',
+            image: null,
+            key_url: '',
+          },
+        },
+      )
+    } catch (error) {
+      this.logger.error(
+        'Error creating One Variant of PRODUCT IN DB-WRITE',
+        error,
+      )
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
+  }
+
+  async removeUrl(key: string) {
+    try {
+      return await firstValueFrom(
+        this.clientProducts
+          .send(PRODUCTS_REMOVE_URL, key)
           .pipe(timeout(5000), handleObservableError(ProductsService.name)),
       )
     } catch (error) {

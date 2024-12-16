@@ -1,6 +1,8 @@
 const enum PATTERNAME {
   PRODUCTS_CREATE = 'products.create',
   PRODUCTS_REMOVE = 'products.remove',
+  PRODUCTS_REMOVE_URL = 'products.remove.url',
+  PRODUCTS_CREATE_ONE_VARIANT = 'products.create.one.variant',
 }
 
 type MessagePattern = {
@@ -10,6 +12,13 @@ type MessagePattern = {
 const patterNameWrite: MessagePattern = {
   PRODUCTS_CREATE: PATTERNAME.PRODUCTS_CREATE,
   PRODUCTS_REMOVE: PATTERNAME.PRODUCTS_REMOVE,
+  PRODUCTS_REMOVE_URL: PATTERNAME.PRODUCTS_REMOVE_URL,
+  PRODUCTS_CREATE_ONE_VARIANT: PATTERNAME.PRODUCTS_CREATE_ONE_VARIANT,
 }
 
-export const { PRODUCTS_CREATE, PRODUCTS_REMOVE } = patterNameWrite
+export const {
+  PRODUCTS_CREATE,
+  PRODUCTS_REMOVE,
+  PRODUCTS_REMOVE_URL,
+  PRODUCTS_CREATE_ONE_VARIANT,
+} = patterNameWrite

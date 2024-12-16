@@ -1,11 +1,11 @@
-type ProductVariantDto = {
+type ProductVariantDtoRead = {
   color: string
   url: string
 
   key_url?: string
 }
 
-type ProductInventoryDto = {
+type ProductInventoryDtoRead = {
   minStock: number
   stock: boolean
 }
@@ -15,7 +15,7 @@ interface ProductFindAll {
 
   product: string
 
-  productVariant: ProductVariantDto[]
+  productVariant: ProductVariantDtoRead[]
 
   price: number
 
@@ -42,5 +42,5 @@ interface ProductFindAll {
 
   discount: number
 
-  productInventory: ProductInventoryDto
+  productInventory: ProductInventoryDtoRead
 }

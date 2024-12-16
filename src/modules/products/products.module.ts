@@ -5,8 +5,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices'
 import { proxyName } from './common/proxyName'
 import { AuthModule } from '../auth/auth.module'
 import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data'
-import { ImagesService } from './services/image.service'
 import { HttpModule } from '@nestjs/axios'
+import { ImagesService } from './services/image.service'
 
 @Module({
   imports: [

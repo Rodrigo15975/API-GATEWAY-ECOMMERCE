@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common'
 import {
@@ -29,7 +30,7 @@ import { RolesGuard } from 'src/guards/roles.guard'
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
 import { ProductsService } from './products.service'
-import { ProductDto } from './types/products'
+import { ProductDto, ProductVariantDto } from './types/products'
 
 @ApiTags('microservice-products')
 @ApiCookieAuth('microservice-products')
@@ -57,8 +58,18 @@ export class ProductsController {
   })
   @Post()
   @FormDataRequest()
-  uploadProducts(@Body() data: CreateProductDto) {
+  create(@Body() data: CreateProductDto) {
     return this.productsService.create(data)
+  }
+
+  @Post('one-variant/:id/:categorie')
+  @FormDataRequest()
+  createOneVariant(
+    @Param('id') id: string,
+    @Body() data: ProductVariantDto,
+    @Param('categorie') categorie: string,
+  ) {
+    return this.productsService.createOneVariant(+id, data, categorie)
   }
 
   @ApiConsumes('application/json')
@@ -89,5 +100,10 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id)
+  }
+
+  @Delete()
+  removeUrl(@Query('key') key: string) {
+    return this.productsService.removeUrl(key)
   }
 }
