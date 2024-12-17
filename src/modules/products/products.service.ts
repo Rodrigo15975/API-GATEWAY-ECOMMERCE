@@ -7,7 +7,9 @@ import { PRODUCTS_GET_ALL_READ } from './common/patternRead'
 import {
   PRODUCTS_CREATE,
   PRODUCTS_CREATE_ONE_VARIANT,
+  PRODUCTS_CREATE_SIZE,
   PRODUCTS_REMOVE,
+  PRODUCTS_REMOVE_SIZE,
   PRODUCTS_REMOVE_URL,
 } from './common/patternWrite'
 import { proxyName } from './common/proxyName'
@@ -36,6 +38,22 @@ export class ProductsService {
     } catch (error) {
       this.logger.error(
         'Error send data  in ProductsService CREATE method',
+        error,
+      )
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
+  }
+  async createSizes(id: number, size: string[]) {
+    try {
+      this.logger.log('Send data to create size a product in the DB WRITE....')
+      return await firstValueFrom(
+        this.clientProducts
+          .send(PRODUCTS_CREATE_SIZE, { id, size })
+          .pipe(timeout(5000), handleObservableError(ProductsService.name)),
+      )
+    } catch (error) {
+      this.logger.error(
+        'Error send data size  in ProductsService CREATE method',
         error,
       )
       throw ErrorHandlerService.handleError(error, ProductsService.name)
@@ -122,6 +140,19 @@ export class ProductsService {
       )
     } catch (error) {
       this.logger.error('Error remove PRODUCT IN DB-WRITE', error)
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
+  }
+
+  async removeOneSize(id: number, sizeToRemove: string) {
+    try {
+      return await firstValueFrom(
+        this.clientProducts
+          .send(PRODUCTS_REMOVE_SIZE, { id, sizeToRemove })
+          .pipe(timeout(5000), handleObservableError(ProductsService.name)),
+      )
+    } catch (error) {
+      this.logger.error('Error remove ONE-SIZE-PRODUCT IN DB-WRITE', error)
       throw ErrorHandlerService.handleError(error, ProductsService.name)
     }
   }

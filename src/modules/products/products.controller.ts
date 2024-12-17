@@ -71,6 +71,10 @@ export class ProductsController {
   ) {
     return this.productsService.createOneVariant(+id, data, categorie)
   }
+  @Post('size/:id')
+  createOneSize(@Param('id') id: string, @Body() size: string[]) {
+    return this.productsService.createSizes(+id, size)
+  }
 
   @ApiConsumes('application/json')
   @ApiResponse({
@@ -100,6 +104,10 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id)
+  }
+  @Delete('size/:id/:size')
+  removeOneSize(@Param('id') id: string, @Param('size') sizeToRemove: string) {
+    return this.productsService.removeOneSize(+id, sizeToRemove)
   }
 
   @Delete()
