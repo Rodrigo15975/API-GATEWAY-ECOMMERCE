@@ -11,6 +11,7 @@ import {
   PRODUCTS_REMOVE,
   PRODUCTS_REMOVE_SIZE,
   PRODUCTS_REMOVE_URL,
+  PRODUCTS_UPDATE,
 } from './common/patternWrite'
 import { proxyName } from './common/proxyName'
 import { CreateProductDto } from './dto/create-product.dto'
@@ -78,10 +79,17 @@ export class ProductsService {
     return `This action returns a #${id} product`
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    console.log(updateProductDto)
-
-    return `This action updates a #${id} product`
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    try {
+      return await firstValueFrom(
+        this.clientProducts
+          .send(PRODUCTS_UPDATE, { ...updateProductDto, id })
+          .pipe(timeout(5000), handleObservableError(ProductsService.name)),
+      )
+    } catch (error) {
+      this.logger.error('Error update PRODUCT IN DB-WRITE', error)
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
   }
 
   async remove(id: number) {

@@ -88,6 +88,8 @@ export class ProductsController {
   })
   @Get()
   findAll() {
+    console.log('Getting all products')
+
     return this.productsService.findAll()
   }
 

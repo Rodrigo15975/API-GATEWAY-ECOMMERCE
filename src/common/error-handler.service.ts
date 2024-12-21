@@ -4,7 +4,7 @@ export class ErrorHandlerService {
   static handleError(error: any, path: string): HttpException {
     throw new HttpException(
       {
-        statusCode: error?.status || error.response.statusCode,
+        statusCode: error?.statusCode || error.response.statusCode,
         message: error?.message || error,
         timestamp: new Date().toISOString(),
         path: `Service: /${path}`,
