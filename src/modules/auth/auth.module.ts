@@ -16,6 +16,10 @@ import { ConfigService } from '@nestjs/config'
           options: {
             host: configService.getOrThrow('REDIS_HOST'),
             port: configService.getOrThrow('REDIS_PORT'),
+            retryAttempts: 10,
+            retryDelay: 10000,
+            maxLoadingRetryTime: 90000,
+            requestTimeout: 5000,
           },
         }),
         inject: [ConfigService],

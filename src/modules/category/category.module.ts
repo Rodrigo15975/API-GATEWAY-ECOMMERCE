@@ -21,6 +21,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
           options: {
             host: configService.getOrThrow('REDIS_HOST'),
             port: configService.getOrThrow('REDIS_PORT'),
+            retryAttempts: 3,
+            retryDelay: 10000,
           },
         }),
       },
@@ -33,6 +35,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
           options: {
             host: configService.getOrThrow('REDIS_HOST'),
             port: configService.getOrThrow('REDIS_PORT'),
+            retryAttempts: 3,
+            retryDelay: 10000,
           },
         }),
       },
