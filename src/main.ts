@@ -33,6 +33,13 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      // errorHttpStatusCode: 400,
+      // transformOptions: { enableImplicitConversion: true },
+      // disableErrorMessages: false,
+      // validationError: { target: false },
+      // stopAtFirstError: true,
     }),
   )
 

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common'
@@ -29,6 +30,10 @@ export class CouponController {
   @Post()
   createOrUpdate(@Body() createCouponDto: CreateCouponDto) {
     return this.couponService.createOrUpdate(createCouponDto)
+  }
+  @Patch()
+  update(@Body() updateCouponDto: CreateCouponDto) {
+    return this.couponService.createOrUpdate(updateCouponDto)
   }
 
   @Get()
