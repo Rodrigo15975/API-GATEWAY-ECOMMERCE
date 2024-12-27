@@ -15,6 +15,6 @@ export class CreateCouponDto {
   @IsBoolean({ message: 'isNew is required' })
   isNew: boolean
 
-  @IsNotEmpty({ message: 'isNew is required' })
+  @IsOptional({ message: 'id is optional' })
   id: number
 }
