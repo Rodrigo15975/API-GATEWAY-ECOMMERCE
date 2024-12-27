@@ -16,6 +16,7 @@ export class CouponService {
   private readonly logger: Logger = new Logger(CouponService.name)
   constructor(
     @Inject(proxyName.name) private readonly couponClient: ClientProxy,
+    @Inject(proxyName.name_read) private readonly couponClientRead: ClientProxy,
   ) {}
 
   async createOrUpdate(createCouponDto: CreateCouponDto) {
@@ -34,7 +35,7 @@ export class CouponService {
   async findAll() {
     try {
       return await firstValueFrom(
-        this.couponClient
+        this.couponClientRead
           .send(COUPON_GET_ALL_READ, {})
           .pipe(timeout(5000), handleObservableError(CouponService.name)),
       )

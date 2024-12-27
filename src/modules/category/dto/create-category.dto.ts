@@ -1,8 +1,16 @@
-import { IsBoolean, IsDateString, IsNotEmpty } from 'class-validator'
+import {
+  IsBoolean,
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator'
 
 export class CreateCategoryDto {
   @IsNotEmpty()
   category: string
+
+  @IsOptional()
+  id: number
 }
 
 export class CreateCategoryManyDto {
@@ -24,4 +32,10 @@ export class CreateDiscountRulesCategory {
   @IsNotEmpty()
   @IsBoolean()
   is_active: boolean
+
+  @IsOptional()
+  categoryId: number
+
+  @IsOptional()
+  id: number
 }
