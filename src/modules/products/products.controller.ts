@@ -98,20 +98,46 @@ export class ProductsController {
     return this.productsService.findOne(+id)
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Product updating successfully',
+  })
+  @ApiBody({
+    type: UpdateProductDto,
+    required: true,
+  })
+  @ApiHeader({
+    name: 'Product',
+    description: 'Product Data',
+    allowEmptyValue: true,
+    required: true,
+  })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(+id, updateProductDto)
   }
 
+  @ApiOkResponse({
+    status: HttpStatus.ACCEPTED,
+    description: 'Product deleting successfully',
+  })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id)
   }
+  @ApiOkResponse({
+    status: HttpStatus.ACCEPTED,
+    description: 'Product size deleting successfully',
+  })
   @Delete('size/:id/:size')
   removeOneSize(@Param('id') id: string, @Param('size') sizeToRemove: string) {
     return this.productsService.removeOneSize(+id, sizeToRemove)
   }
 
+  @ApiOkResponse({
+    status: HttpStatus.ACCEPTED,
+    description: 'Product url deleting successfully',
+  })
   @Delete()
   removeUrl(@Query('key') key: string) {
     return this.productsService.removeUrl(key)
