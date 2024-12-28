@@ -32,13 +32,26 @@ export class CouponService {
     }
   }
 
+  async verifyCouponDateExpired(updateCouponDto: FindAllCoupon) {
+    try {
+      return await firstValueFrom(
+        this.couponClient
+          .send(COUPON_CREATE, updateCouponDto)
+          .pipe(timeout(5000), handleObservableError(CouponService.name)),
+      )
+    } catch (error) {
+      this.logger.error(error)
+      throw ErrorHandlerService.handleError(error, CouponService.name)
+    }
+  }
+
   async findAll() {
     try {
       return await firstValueFrom(
         this.couponClientRead
-          .send(COUPON_GET_ALL_READ, {})
+          .send<FindAllCoupon[]>(COUPON_GET_ALL_READ, {})
           .pipe(timeout(5000), handleObservableError(CouponService.name)),
-      )
+      ).then((data: FindAllCoupon[]) => data)
     } catch (error) {
       this.logger.error(error)
       throw ErrorHandlerService.handleError(error, CouponService.name)

@@ -55,5 +55,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
   ],
   controllers: [CouponController],
   providers: [CouponService],
+  exports: [CouponService],
 })
 export class CouponModule {}

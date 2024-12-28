@@ -6,6 +6,7 @@ import { ProductsModule } from './modules/products/products.module'
 import { RoleModule } from './modules/role/role.module'
 import { UserModule } from './modules/user/user.module'
 import { AuthMiddleware } from './middleware/auth.middleware'
+import { CronJobModule } from './modules/cron-job/cron-job.module'
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AuthMiddleware } from './middleware/auth.middleware'
     ProductsModule,
     CategoryModule,
     CouponModule,
+    CronJobModule,
   ],
   controllers: [],
   providers: [],
