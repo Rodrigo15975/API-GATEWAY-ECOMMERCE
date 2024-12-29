@@ -1,12 +1,8 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { firstValueFrom, lastValueFrom, timeout } from 'rxjs'
+import { ErrorHandlerService } from 'src/common/error-handler.service'
+import { handleObservableError } from 'src/common/handleObservableError'
 import { CATEGORY_FIND_ALL_READ } from './common/patternRead'
 import {
   CATEGORY_CREATE,
@@ -27,8 +23,6 @@ import {
   UpdateCategoryDto,
   UpdateDiscountCategoryDto,
 } from './dto/update-category.dto'
-import { handleObservableError } from 'src/common/handleObservableError'
-import { ErrorHandlerService } from 'src/common/error-handler.service'
 @Injectable()
 export class CategoryService {
   private readonly logger = new Logger(CategoryService.name)
@@ -51,10 +45,7 @@ export class CategoryService {
       )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
 
@@ -65,10 +56,7 @@ export class CategoryService {
       )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
   async createMany(createCategoryDto: CreateCategoryManyDto) {
@@ -78,10 +66,7 @@ export class CategoryService {
       )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
 
@@ -98,10 +83,7 @@ export class CategoryService {
       ).then((data: FindAllCategory[]) => data)
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
 
@@ -112,10 +94,7 @@ export class CategoryService {
       )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
   async updateDiscount(id: number, data: UpdateDiscountCategoryDto) {
@@ -128,10 +107,7 @@ export class CategoryService {
       )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
 
@@ -151,10 +127,7 @@ export class CategoryService {
       )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
 
@@ -163,10 +136,7 @@ export class CategoryService {
       return firstValueFrom(this.clientProductsWrite.send(CATEGORY_DELETE, id))
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
 }
