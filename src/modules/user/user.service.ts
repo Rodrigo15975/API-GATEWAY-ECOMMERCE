@@ -1,12 +1,8 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom, lastValueFrom } from 'rxjs'
+import { firstValueFrom, lastValueFrom, timeout } from 'rxjs'
+import { ErrorHandlerService } from 'src/common/error-handler.service'
+import { handleObservableError } from 'src/common/handleObservableError'
 import {
   USER_FIND_ALL_READ,
   USER_FIND_ONE_READ,
@@ -28,26 +24,26 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     try {
       return await firstValueFrom(
-        this.userClient.send(USER_CREATE, createUserDto),
+        this.userClient
+          .send(USER_CREATE, createUserDto)
+          .pipe(timeout(5000), handleObservableError(UserService.name)),
       )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, UserService.name)
     }
   }
 
   async findAll() {
     try {
-      return await lastValueFrom(this.userClient.send(USER_FIND_ALL_READ, {}))
+      return await lastValueFrom(
+        this.userClient
+          .send(USER_FIND_ALL_READ, {})
+          .pipe(timeout(5000), handleObservableError(UserService.name)),
+      )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, UserService.name)
     }
   }
 
@@ -56,36 +52,33 @@ export class UserService {
       return await firstValueFrom(this.userClient.send(USER_FIND_ONE_READ, id))
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, UserService.name)
     }
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
       return await lastValueFrom(
-        this.userClient.send(USER_UPDATE, { ...updateUserDto, id }),
+        this.userClient
+          .send(USER_UPDATE, { ...updateUserDto, id })
+          .pipe(timeout(5000), handleObservableError(UserService.name)),
       )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, UserService.name)
     }
   }
 
   async remove(id: number) {
     try {
-      return await firstValueFrom(this.userClient.send(USER_REMOVE, id))
+      return await firstValueFrom(
+        this.userClient
+          .send(USER_REMOVE, id)
+          .pipe(timeout(5000), handleObservableError(UserService.name)),
+      )
     } catch (error) {
       this.logger.error(error)
-      throw new HttpException(
-        error.message || 'Internal Server Error',
-        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      )
+      throw ErrorHandlerService.handleError(error, UserService.name)
     }
   }
 }

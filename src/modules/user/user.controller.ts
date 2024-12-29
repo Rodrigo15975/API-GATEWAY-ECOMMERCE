@@ -54,6 +54,10 @@ export class UserController {
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Users has been successfully deleted.',
+  })
   @Get()
   findAll() {
     return this.userService.findAll()
