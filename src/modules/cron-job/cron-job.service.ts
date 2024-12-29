@@ -35,8 +35,8 @@ export class CronJobService {
     }
   }
 
-  // Se ejecuta cada 10 segundos
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  // Se ejecuta a las 23:59 todos los días
+  @Cron(CronExpression.EVERY_DAY_AT_11PM)
   async verifyDiscountOfCategory() {
     try {
       this.logger.log('Initial verification discount category  ')
