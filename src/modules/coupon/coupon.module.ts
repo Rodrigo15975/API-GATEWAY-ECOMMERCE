@@ -5,9 +5,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices'
 import { proxyName } from './common/proxyName'
 import { AuthModule } from '../auth/auth.module'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { CategoryModule } from '../category/category.module'
 
 @Module({
   imports: [
+    CategoryModule,
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,

@@ -7,10 +7,16 @@ import {
 import { CouponService } from '../coupon/coupon.service'
 import { expiredDateVerification } from 'src/utils/verificationDate'
 import { Cron, CronExpression } from '@nestjs/schedule'
+import { CategoryService } from '../category/category.service'
 @Injectable()
 export class CronJobService {
   private readonly logger = new Logger(CronJobService.name)
-  constructor(private readonly couponService: CouponService) {}
+  constructor(
+    private readonly couponService: CouponService,
+    private readonly categoryService: CategoryService,
+  ) {
+    this.logger.log('CronJobService initialized')
+  }
 
   private async findAllCoupons() {
     try {
@@ -20,7 +26,47 @@ export class CronJobService {
       throw new InternalServerErrorException(error)
     }
   }
+  private async findAllCategoryWithDiscount() {
+    try {
+      return await this.categoryService.findAll()
+    } catch (error) {
+      this.logger.error(error)
+      throw new InternalServerErrorException(error)
+    }
+  }
 
+  // Se ejecuta cada 10 segundos
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  async verifyDiscountOfCategory() {
+    try {
+      this.logger.log('Initial verification discount category  ')
+      const categories = await this.findAllCategoryWithDiscount()
+
+      const categoriesWithDiscount = categories.filter(
+        (category) => category?.discountRules?.length > 0,
+      )
+      const verifyDateExpiredDiscount = categoriesWithDiscount.find(
+        (discount) =>
+          expiredDateVerification(discount.discountRules[0].end_date),
+      )
+      if (verifyDateExpiredDiscount) {
+        const addVerification: FindAllCategory = {
+          ...verifyDateExpiredDiscount,
+          discountRules: [
+            {
+              ...verifyDateExpiredDiscount.discountRules[0],
+              is_active: false,
+            },
+          ],
+        }
+        await this.categoryService.verifyDiscountOfCategory(addVerification)
+        this.logger.log('Finish verification discount category  ')
+      }
+    } catch (error) {
+      this.logger.error(error)
+      throw new InternalServerErrorException(error)
+    }
+  }
   // Se ejecuta a las 23:59 todos los días
   @Cron(CronExpression.EVERY_DAY_AT_11PM)
   async verifyCouponDateExpired() {

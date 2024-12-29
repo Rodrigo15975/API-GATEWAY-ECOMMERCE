@@ -28,6 +28,7 @@ import {
   UpdateDiscountCategoryDto,
 } from './dto/update-category.dto'
 import { handleObservableError } from 'src/common/handleObservableError'
+import { ErrorHandlerService } from 'src/common/error-handler.service'
 @Injectable()
 export class CategoryService {
   private readonly logger = new Logger(CategoryService.name)
@@ -84,13 +85,17 @@ export class CategoryService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<FindAllCategory[]> {
     try {
       return firstValueFrom(
         this.clientProductsRead
-          .send(CATEGORY_FIND_ALL_READ, {})
+          .send<
+            FindAllCategory[],
+            Record<string, unknown>
+          >(CATEGORY_FIND_ALL_READ, {})
           .pipe(timeout(5000), handleObservableError(CategoryService.name)),
-      )
+        { defaultValue: [] as FindAllCategory[] },
+      ).then((data: FindAllCategory[]) => data)
     } catch (error) {
       this.logger.error(error)
       throw new HttpException(
@@ -127,6 +132,15 @@ export class CategoryService {
         error.message || 'Internal Server Error',
         error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
       )
+    }
+  }
+
+  async verifyDiscountOfCategory(data: FindAllCategory) {
+    try {
+      await this.updateDiscount(data.id, data)
+    } catch (error) {
+      this.logger.error('error update discount category', error)
+      throw ErrorHandlerService.handleError(error, CategoryService.name)
     }
   }
 
