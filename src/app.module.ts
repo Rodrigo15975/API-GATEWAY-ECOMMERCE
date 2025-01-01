@@ -7,6 +7,7 @@ import { RoleModule } from './modules/role/role.module'
 import { UserModule } from './modules/user/user.module'
 import { AuthMiddleware } from './middleware/auth.middleware'
 import { CronJobModule } from './modules/cron-job/cron-job.module'
+import { ClientsModule } from './modules/clients/clients.module'
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CronJobModule } from './modules/cron-job/cron-job.module'
     CategoryModule,
     CouponModule,
     CronJobModule,
+    ClientsModule,
   ],
   controllers: [],
   providers: [],
@@ -41,6 +43,10 @@ export class AppModule {
         },
         {
           path: 'role',
+          method: RequestMethod.POST,
+        },
+        {
+          path: 'clients',
           method: RequestMethod.POST,
         },
       )
