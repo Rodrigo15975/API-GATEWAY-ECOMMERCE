@@ -46,8 +46,8 @@ export class AppModule {
           method: RequestMethod.POST,
         },
         {
-          path: 'clients',
-          method: RequestMethod.POST,
+          path: 'clients(.*)',
+          method: RequestMethod.ALL,
         },
       )
       .forRoutes('*')

@@ -15,18 +15,22 @@ export class ClientsService {
       createClientDto,
     })
   }
-  async createCuponIfNotExists(idGoogle: string) {
+  async createCuponIfUserNotExists(idGoogle: string) {
     try {
       await this.amqpConnection.publish(
         configPublish.ROUTING_EXCHANGE_CREATE_COUPON,
         configPublish.ROUTING_ROUTINGKEY_CREATE_COUPON,
         idGoogle,
       )
+
       this.logger.verbose(
         `Message sent to: ${configPublish.ROUTING_EXCHANGE_CREATE_COUPON} `,
       )
     } catch (error) {
-      this.logger.error(error)
+      this.logger.error(
+        'Error publish with coupon create if user not exists',
+        error,
+      )
       throw ErrorHandlerService.handleError(error, ClientsService.name)
     }
   }

@@ -20,18 +20,9 @@ export class ClientsController {
     return this.clientsService.create(createClientDto)
   }
 
-  @Post('google')
-  createCuponIfClientNotExists(
-    @Param('idGoogle') idGoogle: string,
-    @Body() createClientDto: CreateClientDto,
-  ) {
-    console.log({
-      idGoogle,
-      createClientDto,
-    })
-
-    return { idGoogle }
-    return this.clientsService.createCuponIfNotExists(idGoogle)
+  @Post(':idGoogle')
+  createCuponIfClientNotExists(@Param('idGoogle') idGoogle: string) {
+    return this.clientsService.createCuponIfUserNotExists(idGoogle)
   }
 
   @Get()
