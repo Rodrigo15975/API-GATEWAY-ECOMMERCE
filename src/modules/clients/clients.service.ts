@@ -17,15 +17,17 @@ export class ClientsService {
   }
   async createCuponIfUserNotExists(idGoogle: string) {
     try {
-      await this.amqpConnection.publish(
-        configPublish.ROUTING_EXCHANGE_CREATE_COUPON,
-        configPublish.ROUTING_ROUTINGKEY_CREATE_COUPON,
-        idGoogle,
-      )
-
+      const response = await this.amqpConnection.request({
+        exchange: configPublish.ROUTING_EXCHANGE_CREATE_COUPON,
+        routingKey: configPublish.ROUTING_ROUTINGKEY_CREATE_COUPON,
+        payload: idGoogle,
+        correlationId: '123',
+        timeout: 10000,
+      })
       this.logger.verbose(
         `Message sent to: ${configPublish.ROUTING_EXCHANGE_CREATE_COUPON} `,
       )
+      return response
     } catch (error) {
       this.logger.error(
         'Error publish with coupon create if user not exists',
