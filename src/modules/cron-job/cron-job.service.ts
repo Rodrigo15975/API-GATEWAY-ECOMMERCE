@@ -15,7 +15,7 @@ export class CronJobService {
     private readonly couponService: CouponService,
     private readonly categoryService: CategoryService,
   ) {
-    this.logger.log('CronJobService initialized')
+    this.logger.verbose('CronJobService initialized')
   }
 
   private async findAllCoupons() {
