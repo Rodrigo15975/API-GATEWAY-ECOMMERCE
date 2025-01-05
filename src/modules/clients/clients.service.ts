@@ -40,6 +40,21 @@ export class ClientsService {
   async findAll() {
     try {
       return await this.amqpConnection.request({
+        exchange: configPublish.ROUTING_EXCHANGE_GET_ALL_CLIENTS,
+        routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ALL_CLIENTS,
+        payload: {},
+        correlationId: randomUUID().toString(),
+        timeout: 10000,
+        expiration: 10000,
+      })
+    } catch (error) {
+      this.logger.error('Error get all clients', error)
+      throw ErrorHandlerService.handleError(error, ClientsService.name)
+    }
+  }
+  async findAllOnlyCouponsClients() {
+    try {
+      return await this.amqpConnection.request<FindAllOnlyCouponsClients[]>({
         exchange: configPublish.ROUTING_EXCHANGE_GET_ALL_CLIENTS_ONLY_COUPONS,
         routingKey:
           configPublish.ROUTING_ROUTINGKEY_GET_ALL_CLIENTS_ONLY_COUPONS,
