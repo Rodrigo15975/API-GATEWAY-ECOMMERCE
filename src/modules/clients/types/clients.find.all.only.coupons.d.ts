@@ -7,5 +7,6 @@ interface FindAllOnlyCouponsClients {
     startDate: string
     espiryDate: string
     code: string
+    expired: boolean
   }
 }

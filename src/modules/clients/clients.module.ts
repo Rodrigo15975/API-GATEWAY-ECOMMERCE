@@ -32,5 +32,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
   ],
   controllers: [ClientsController],
   providers: [ClientsService],
+  exports: [ClientsService],
 })
 export class ClientsModule {}

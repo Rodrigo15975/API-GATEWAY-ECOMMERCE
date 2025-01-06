@@ -8,14 +8,36 @@ import { CouponService } from '../coupon/coupon.service'
 import { expiredDateVerification } from 'src/utils/verificationDate'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { CategoryService } from '../category/category.service'
+import { ClientsService } from '../clients/clients.service'
 @Injectable()
 export class CronJobService {
   private readonly logger = new Logger(CronJobService.name)
   constructor(
     private readonly couponService: CouponService,
     private readonly categoryService: CategoryService,
+    private readonly clientsService: ClientsService,
   ) {
     this.logger.verbose('CronJobService initialized')
+  }
+
+  // private async findAllOnlyCouponsClients() {
+  //   try {
+  //     return await this.clientsService.findAllOnlyCouponsClients()
+  //   } catch (error) {
+  //     this.logger.error(error)
+  //     throw new InternalServerErrorException(error)
+  //   }
+  // }
+
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  async verifyExpiredCouponClient() {
+    try {
+      this.logger.verbose('Message sent to: updateEspiryCouponsClients ')
+      await this.clientsService.updateEspiryDateCouponForNewClient()
+    } catch (error) {
+      this.logger.error(error)
+      throw new InternalServerErrorException(error)
+    }
   }
 
   private async findAllCoupons() {

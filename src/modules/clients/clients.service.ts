@@ -9,6 +9,7 @@ import { randomUUID } from 'crypto'
 @Injectable()
 export class ClientsService {
   private readonly logger: Logger = new Logger(ClientsService.name)
+  private readonly randomUUID: string = randomUUID().toString()
   constructor(private readonly amqpConnection: AmqpConnection) {}
 
   async create(createClientDto: CreateClientDto) {
@@ -25,7 +26,7 @@ export class ClientsService {
         exchange: configPublish.ROUTING_EXCHANGE_CREATE_COUPON,
         routingKey: configPublish.ROUTING_ROUTINGKEY_CREATE_COUPON,
         payload: idGoogle,
-        correlationId: randomUUID().toString(),
+        correlationId: this.randomUUID,
         timeout: 10000,
       })
     } catch (error) {
@@ -43,7 +44,7 @@ export class ClientsService {
         exchange: configPublish.ROUTING_EXCHANGE_GET_ALL_CLIENTS,
         routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ALL_CLIENTS,
         payload: {},
-        correlationId: randomUUID().toString(),
+        correlationId: this.randomUUID,
         timeout: 10000,
         expiration: 10000,
       })
@@ -52,19 +53,16 @@ export class ClientsService {
       throw ErrorHandlerService.handleError(error, ClientsService.name)
     }
   }
-  async findAllOnlyCouponsClients() {
+
+  async updateEspiryDateCouponForNewClient() {
     try {
-      return await this.amqpConnection.request<FindAllOnlyCouponsClients[]>({
-        exchange: configPublish.ROUTING_EXCHANGE_GET_ALL_CLIENTS_ONLY_COUPONS,
-        routingKey:
-          configPublish.ROUTING_ROUTINGKEY_GET_ALL_CLIENTS_ONLY_COUPONS,
-        payload: {},
-        correlationId: randomUUID().toString(),
-        timeout: 10000,
-        expiration: 10000,
-      })
+      await this.amqpConnection.publish(
+        configPublish.ROUTING_EXCHANGE_UPDATE_EXPIRY_DATE_COUPON,
+        configPublish.ROUTING_ROUTINGKEY_UPDATE_EXPIRY_DATE_COUPON,
+        {},
+      )
     } catch (error) {
-      this.logger.error('Error get all clients', error)
+      this.logger.error('Error send to:  updateEspiryCouponClient', error)
       throw ErrorHandlerService.handleError(error, ClientsService.name)
     }
   }
