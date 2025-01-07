@@ -1,10 +1,9 @@
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq'
 import { Injectable, Logger } from '@nestjs/common'
+import { randomUUID } from 'crypto'
 import { ErrorHandlerService } from 'src/common/error-handler.service'
 import { configPublish } from './common/config-rabbitMQ'
 import { CreateClientDto } from './dto/create-client.dto'
-import { UpdateClientDto } from './dto/update-client.dto'
-import { randomUUID } from 'crypto'
 
 @Injectable()
 export class ClientsService {
@@ -67,17 +66,10 @@ export class ClientsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`
-  }
-
-  update(id: number, updateClientDto: UpdateClientDto) {
-    console.log('createClientDto', updateClientDto)
-
-    return `This action updates a #${id} client`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} client`
+  /**
+   * testingEmail
+   */
+  async testingEmail() {
+    await this.amqpConnection.publish('testing', 'testing', {})
   }
 }
