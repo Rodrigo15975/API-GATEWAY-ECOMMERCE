@@ -20,16 +20,7 @@ export class CronJobService {
     this.logger.verbose('CronJobService initialized')
   }
 
-  // private async findAllOnlyCouponsClients() {
-  //   try {
-  //     return await this.clientsService.findAllOnlyCouponsClients()
-  //   } catch (error) {
-  //     this.logger.error(error)
-  //     throw new InternalServerErrorException(error)
-  //   }
-  // }
-
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_11PM)
   async verifyExpiredCouponClient() {
     try {
       this.logger.verbose('Message sent to: updateEspiryCouponsClients ')
