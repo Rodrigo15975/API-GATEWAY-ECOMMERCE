@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { ClientsService } from './clients.service'
 import { CreateClientDto } from './dto/create-client.dto'
 
@@ -12,17 +12,24 @@ export class ClientsController {
   }
 
   @Post(':idGoogle')
-  createCuponIfClientNotExists(@Param('idGoogle') idGoogle: string) {
-    return this.clientsService.createCuponIfUserNotExists(idGoogle)
+  createCuponIfClientNotExists(
+    @Param('idGoogle') idGoogle: string,
+    @Query('emailGoogle') emailGoogle: string,
+    @Query('nameGoogle') nameGoogle: string,
+  ) {
+    return this.clientsService.createCuponIfUserNotExists(
+      idGoogle,
+      emailGoogle,
+      nameGoogle,
+    )
   }
 
   @Get()
   findAll() {
     return this.clientsService.findAll()
   }
-
-  @Get('testing')
-  testing() {
-    return this.clientsService.testingEmail()
+  @Get(':idGoogle')
+  findOne(@Param('idGoogle') idGoogle: string) {
+    return this.clientsService.findOne(idGoogle)
   }
 }

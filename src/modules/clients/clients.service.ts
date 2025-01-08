@@ -16,7 +16,11 @@ export class ClientsService {
       createClientDto,
     })
   }
-  async createCuponIfUserNotExists(idGoogle: string) {
+  async createCuponIfUserNotExists(
+    userIdGoogle: string,
+    emailGoogle: string,
+    nameGoogle: string,
+  ) {
     try {
       this.logger.verbose(
         `Message sent to: ${configPublish.ROUTING_EXCHANGE_CREATE_COUPON} `,
@@ -24,7 +28,7 @@ export class ClientsService {
       return await this.amqpConnection.request({
         exchange: configPublish.ROUTING_EXCHANGE_CREATE_COUPON,
         routingKey: configPublish.ROUTING_ROUTINGKEY_CREATE_COUPON,
-        payload: idGoogle,
+        payload: { userIdGoogle, emailGoogle, nameGoogle },
         correlationId: this.randomUUID,
         timeout: 10000,
       })
@@ -33,6 +37,20 @@ export class ClientsService {
         'Error publish with coupon create if user not exists',
         error,
       )
+      throw ErrorHandlerService.handleError(error, ClientsService.name)
+    }
+  }
+  async findOne(userIdGoogle: string) {
+    try {
+      return await this.amqpConnection.request<FindOneClient>({
+        exchange: configPublish.ROUTING_EXCHANGE_GET_ONE_CLIENT,
+        routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ONE_CLIENT,
+        payload: { userIdGoogle },
+        correlationId: this.randomUUID,
+        timeout: 10000,
+      })
+    } catch (error) {
+      this.logger.error('Error get client', error)
       throw ErrorHandlerService.handleError(error, ClientsService.name)
     }
   }
@@ -64,12 +82,5 @@ export class ClientsService {
       this.logger.error('Error send to:  updateEspiryCouponClient', error)
       throw ErrorHandlerService.handleError(error, ClientsService.name)
     }
-  }
-
-  /**
-   * testingEmail
-   */
-  async testingEmail() {
-    await this.amqpConnection.publish('testing', 'testing', {})
   }
 }

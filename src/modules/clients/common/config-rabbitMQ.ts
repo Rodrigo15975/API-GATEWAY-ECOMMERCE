@@ -19,6 +19,9 @@ export const configPublish = {
 
   ROUTING_EXCHANGE_GET_ALL_CLIENTS: 'client.get.all.clients',
   ROUTING_ROUTINGKEY_GET_ALL_CLIENTS: 'client.get.all.clients',
+
+  ROUTING_EXCHANGE_GET_ONE_CLIENT: 'client.get.one.client',
+  ROUTING_ROUTINGKEY_GET_ONE_CLIENT: 'client.get.one.client',
 }
 
 // Siempre configurar esto si no te sale error internal server
@@ -40,6 +43,11 @@ export const configQueue: RabbitMQQueueConfig[] = [
     routingKey: 'client.get.all.clients',
     exchange: 'client.get.all.clients',
   },
+  {
+    name: 'client.get.one.client',
+    routingKey: 'client.get.one.client',
+    exchange: 'client.get.one.client',
+  },
 ]
 
 export const configExchange: RabbitMQExchangeConfig[] = [
@@ -57,7 +65,7 @@ export const configExchange: RabbitMQExchangeConfig[] = [
     type: 'direct',
   },
   {
-    name: 'testing',
+    name: 'client.get.one.client',
     type: 'direct',
   },
 ]
