@@ -40,8 +40,10 @@ export class ClientsService {
       throw ErrorHandlerService.handleError(error, ClientsService.name)
     }
   }
+
   async findOne(userIdGoogle: string) {
     try {
+      this.logger.verbose('Send find one client', userIdGoogle)
       return await this.amqpConnection.request<FindOneClient>({
         exchange: configPublish.ROUTING_EXCHANGE_GET_ONE_CLIENT,
         routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ONE_CLIENT,
@@ -50,7 +52,11 @@ export class ClientsService {
         timeout: 10000,
       })
     } catch (error) {
-      this.logger.error('Error get client', error)
+      console.log({
+        error,
+      })
+
+      this.logger.error('Error get one client', error)
       throw ErrorHandlerService.handleError(error, ClientsService.name)
     }
   }

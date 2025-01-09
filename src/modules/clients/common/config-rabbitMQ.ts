@@ -43,6 +43,7 @@ export const configQueue: RabbitMQQueueConfig[] = [
     routingKey: 'client.get.all.clients',
     exchange: 'client.get.all.clients',
   },
+
   {
     name: 'client.get.one.client',
     routingKey: 'client.get.one.client',
