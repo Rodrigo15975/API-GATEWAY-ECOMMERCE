@@ -2,6 +2,10 @@ import { HttpException, HttpStatus } from '@nestjs/common'
 
 export class ErrorHandlerService {
   static handleError(error: any, path: string): HttpException {
+    console.log({
+      error,
+    })
+
     throw new HttpException(
       {
         statusCode: error?.statusCode || error.response.statusCode,

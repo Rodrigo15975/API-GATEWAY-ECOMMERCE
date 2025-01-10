@@ -17,9 +17,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         uri: configService.getOrThrow('RABBITMQ_URL'),
         exchanges: configExchange,
         queues: configQueue,
-        connectionInitOptions: {
-          wait: false,
-        },
+        // connectionInitOptions: {
+        //   wait: false,
+        // },
         // channels: {
         //   default: {
         //     // El prefetchCount en RabbitMQ controla la cantidad de mensajes que un consumidor puede recibir y procesar simultáneamente antes de enviar un ack (confirmación) de los mensajes procesados. Esto forma parte del mecanismo de QoS (Quality of Service) en RabbitMQ.

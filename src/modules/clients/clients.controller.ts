@@ -32,4 +32,12 @@ export class ClientsController {
   findOne(@Param('idGoogle') idGoogle: string) {
     return this.clientsService.findOne(idGoogle)
   }
+
+  @Get('verify/:idGoogle')
+  findOneVerify(
+    @Param('idGoogle') idGoogle: string,
+    @Query('verify') verify: boolean,
+  ) {
+    return this.clientsService.findOneVerify(idGoogle, verify)
+  }
 }

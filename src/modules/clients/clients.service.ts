@@ -30,7 +30,7 @@ export class ClientsService {
         routingKey: configPublish.ROUTING_ROUTINGKEY_CREATE_COUPON,
         payload: { userIdGoogle, emailGoogle, nameGoogle },
         correlationId: this.randomUUID,
-        timeout: 10000,
+        timeout: 30000,
       })
     } catch (error) {
       this.logger.error(
@@ -43,13 +43,30 @@ export class ClientsService {
 
   async findOne(userIdGoogle: string) {
     try {
-      this.logger.verbose('Send find one client', userIdGoogle)
       return await this.amqpConnection.request<FindOneClient>({
         exchange: configPublish.ROUTING_EXCHANGE_GET_ONE_CLIENT,
         routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ONE_CLIENT,
         payload: { userIdGoogle },
         correlationId: this.randomUUID,
-        timeout: 10000,
+        timeout: 30000,
+      })
+    } catch (error) {
+      console.log({
+        error,
+      })
+
+      this.logger.error('Error get one client', error)
+      throw ErrorHandlerService.handleError(error, ClientsService.name)
+    }
+  }
+  async findOneVerify(userIdGoogle: string, verify: boolean) {
+    try {
+      return await this.amqpConnection.request<FindOneClient>({
+        exchange: configPublish.ROUTING_EXCHANGE_GET_ONE_CLIENT,
+        routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ONE_CLIENT,
+        payload: { userIdGoogle, verify },
+        correlationId: this.randomUUID,
+        timeout: 30000,
       })
     } catch (error) {
       console.log({
@@ -68,8 +85,8 @@ export class ClientsService {
         routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ALL_CLIENTS,
         payload: {},
         correlationId: this.randomUUID,
-        timeout: 10000,
-        expiration: 10000,
+        timeout: 30000,
+        expiration: 30000,
       })
     } catch (error) {
       this.logger.error('Error get all clients', error)
