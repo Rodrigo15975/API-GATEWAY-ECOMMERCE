@@ -1,13 +1,23 @@
-import { ValidationPipe } from '@nestjs/common'
+// import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import * as dotenv from 'dotenv'
+import * as cookie from 'cookie-parser'
+import { ValidationPipe } from '@nestjs/common'
 // import { HttpExceptionFilter } from './common/catch.exception.filter'
-dotenv.config()
 
 async function bootstrap() {
+  dotenv.config({
+    path:
+      process.env.NODE_ENV === 'production'
+        ? '.env.production'
+        : '.env.development',
+  })
+
   const app = await NestFactory.create(AppModule)
+  app.use(cookie())
+
   const config = new DocumentBuilder()
     .setTitle('API-GATEWAY')
     .setDescription('API-GATEWAY')
@@ -18,10 +28,29 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api-gateway', app, document)
   app.enableCors({
-    origin: true,
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    // allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
+    // origin: true,
+    origin: [
+      'http://192.168.1.29:3000',
+      'https://master.dk87wm75w1xvx.amplifyapp.com',
+      'http://localhost:3000',
+      '*',
+    ],
+    exposedHeaders: [
+      'Set-Cookie',
+      'Authorization',
+      'Access-Control-Allow-Origin',
+    ],
+    methods: ['POST', 'GET', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Access-Control-Allow-Origin',
+      'Access-Control-Allow-Headers',
+      'Access-Control-Allow-Methods',
+      'Access-Control-Allow-Credentials',
+    ],
+    // allowedHeaders: ['Content-Type', 'Authorization'],
   })
 
   // forma de usar el exceptio filter de manera global

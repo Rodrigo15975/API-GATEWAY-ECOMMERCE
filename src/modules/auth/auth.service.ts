@@ -5,17 +5,18 @@ import {
   Inject,
   Injectable,
   Logger,
+  Req,
 } from '@nestjs/common'
-import { AuthData } from './dto/auth-data.dto'
-import { authPattern } from './common/auth.pattern'
 import { ClientProxy } from '@nestjs/microservices'
+import { Request } from 'express'
+import { firstValueFrom } from 'rxjs'
 import {
   AUTH_LOGIN,
   DECODED_TOKEN,
   VERIFY_TOKEN,
 } from './common/auth-event-pattern'
-import { firstValueFrom } from 'rxjs'
-import { Request } from 'express'
+import { authPattern } from './common/auth.pattern'
+import { AuthData } from './dto/auth-data.dto'
 
 @Injectable()
 export class AuthService {
@@ -81,9 +82,17 @@ export class AuthService {
    * @returns
    */
 
-  getTokenCookies(req: Request | any): string {
-    const [, token] = req.headers.cookie?.split('auth=') || []
-    if (!token) throw new BadRequestException('Required Token')
+  getTokenCookies(@Req() req: Request): string {
+    const token = req.cookies.auth
+    if (!token) {
+      throw new BadRequestException({
+        message: 'Required Token',
+        statusCode: HttpStatus.BAD_REQUEST,
+      })
+    }
+    // console.log(req.cookies.auth)
+    // const [, token] = req.headers.cookie?.split('auth=') || []
+
     return token
   }
   /**
@@ -92,12 +101,20 @@ export class AuthService {
    * @returns
    */
   async getCookiesPayloadToken(request: Request | any) {
-    const token = this.getTokenCookies(request)
-    const { payload } = await this.decodedToken(token)
-    if (!payload.id && !payload.role)
-      throw new BadRequestException({
-        message: 'Invalid token',
-      })
-    return payload
+    try {
+      const token = this.getTokenCookies(request)
+      const { payload } = await this.decodedToken(token)
+      if (!payload.id && !payload.role)
+        throw new BadRequestException({
+          message: 'Invalid token',
+        })
+      return payload
+    } catch (error) {
+      this.logger.error(error)
+      throw new HttpException(
+        error.message || 'Internal Server Error',
+        error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+      )
+    }
   }
 }

@@ -26,24 +26,17 @@ export class AuthController {
     @Body() data: AuthData,
     @Res({ passthrough: true }) res: Response,
   ) {
+    const isProduction = process.env.NODE_ENV === 'production'
     const auth = await this.authService.signIn(data)
     res.cookie('auth', auth, {
       // si pones en true, una vez actualizada la pagina en el front
       // se pierde las cookies sale undefined
-      sameSite: 'lax',
-      secure: true,
+      sameSite: isProduction ? 'none' : 'lax', // SameSite=None solo para producción
+      secure: isProduction, // Secure=true solo en producción (HTTPS)
       httpOnly: true,
-      path: '/',
     })
 
     res.send({ auth, statusCode: HttpStatus.OK })
-
-    // res.cookie("auth", auth, {
-    //   sameSite: "none",
-    //   secure: true, // Cambia a true para entornos de producción con HTTPS
-    //   httpOnly: true,
-    //   path: "/",
-    // });
   }
 
   @Get('verify-token/:token')
@@ -58,7 +51,7 @@ export class AuthController {
         sameSite: 'lax',
         secure: true,
         httpOnly: true,
-        path: '/',
+        // path: '/',
       })
 
       res.send({

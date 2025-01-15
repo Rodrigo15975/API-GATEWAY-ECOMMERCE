@@ -13,8 +13,8 @@ export class AuthMiddleware implements NestMiddleware {
   private readonly logger: Logger = new Logger(AuthMiddleware.name)
 
   async use(req: Request, _: Response, next: NextFunction) {
-    const token = this.authService.getTokenCookies(req)
     try {
+      const token = this.authService.getTokenCookies(req)
       await this.authService.verifyToken(token)
     } catch (error) {
       this.logger.error(error)
