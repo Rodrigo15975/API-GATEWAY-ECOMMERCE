@@ -12,6 +12,7 @@ import { AuthService } from 'src/modules/auth/auth.service'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
+  private readonly url_client = process.env.URL_CLIENT
   constructor(
     private readonly reflector: Reflector,
     private readonly authService: AuthService,
@@ -21,8 +22,9 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ])
-
     const request: Request = context.switchToHttp().getRequest()
+    const host = request.hostname
+    if (host === this.url_client || host === this.url_client) return true
 
     const payload = await this.authService.getCookiesPayloadToken(request)
 

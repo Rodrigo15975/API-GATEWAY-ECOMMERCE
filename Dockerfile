@@ -9,6 +9,7 @@ COPY . .
 
 # Establece la variable NODE_ENV en producción
 ENV NODE_ENV=production
+ENV URL_CLIENT=https://master.d2l2oxroeqqeuk.amplifyapp.com
 RUN npm run build
 
 EXPOSE 4000

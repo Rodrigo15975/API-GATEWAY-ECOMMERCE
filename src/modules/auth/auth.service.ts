@@ -90,8 +90,6 @@ export class AuthService {
         statusCode: HttpStatus.BAD_REQUEST,
       })
     }
-    // console.log(req.cookies.auth)
-    // const [, token] = req.headers.cookie?.split('auth=') || []
 
     return token
   }
