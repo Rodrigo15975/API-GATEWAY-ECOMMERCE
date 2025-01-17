@@ -31,23 +31,35 @@ export const configQueue: RabbitMQQueueConfig[] = [
     name: 'client.create.coupon',
     routingKey: 'client.create.coupon',
     exchange: 'client.create.coupon',
+    options: {
+      persistent: true,
+    },
   },
 
   {
     name: 'client.update.expiry.date.coupon',
     routingKey: 'client.update.expiry.date.coupon',
     exchange: 'client.update.expiry.date.coupon',
+    options: {
+      persistent: true,
+    },
   },
   {
     name: 'client.get.all.clients',
     routingKey: 'client.get.all.clients',
     exchange: 'client.get.all.clients',
+    options: {
+      persistent: true,
+    },
   },
 
   {
     name: 'client.get.one.client',
     routingKey: 'client.get.one.client',
     exchange: 'client.get.one.client',
+    options: {
+      persistent: true,
+    },
   },
 ]
 
@@ -55,18 +67,30 @@ export const configExchange: RabbitMQExchangeConfig[] = [
   {
     name: 'client.create.coupon',
     type: 'direct',
+    options: {
+      persistent: true,
+    },
   },
 
   {
     name: 'client.update.expiry.date.coupon',
     type: 'direct',
+    options: {
+      persistent: true,
+    },
   },
   {
     name: 'client.get.all.clients',
     type: 'direct',
+    options: {
+      persistent: true,
+    },
   },
   {
     name: 'client.get.one.client',
     type: 'direct',
+    options: {
+      persistent: true,
+    },
   },
 ]
