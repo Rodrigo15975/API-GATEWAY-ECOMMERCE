@@ -50,10 +50,10 @@ export class AppModule {
           method: RequestMethod.ALL,
         },
 
-        {
-          path: 'products(.*)',
-          method: RequestMethod.ALL,
-        },
+        // {
+        //   path: 'products(.*)',
+        //   method: RequestMethod.GET,
+        // },
       )
       .forRoutes('*')
   }

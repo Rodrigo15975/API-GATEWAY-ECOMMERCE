@@ -24,6 +24,7 @@ export class RolesGuard implements CanActivate {
     ])
     const request: Request = context.switchToHttp().getRequest()
     const host = request.hostname
+
     if (host === this.url_client || host === this.url_client) return true
 
     const payload = await this.authService.getCookiesPayloadToken(request)

@@ -3,7 +3,7 @@ import { ClientProxy } from '@nestjs/microservices'
 import { firstValueFrom, timeout } from 'rxjs'
 import { ErrorHandlerService } from 'src/common/error-handler.service'
 import { handleObservableError } from 'src/common/handleObservableError'
-import { PRODUCTS_GET_ALL_READ } from './common/patternRead'
+import { PRODUCTS_GET_ALL_READ, PRODUCTS_GET_ONE } from './common/patternRead'
 import {
   PRODUCTS_CREATE,
   PRODUCTS_CREATE_ONE_VARIANT,
@@ -75,8 +75,17 @@ export class ProductsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`
+  async findOne(id: number) {
+    try {
+      return await firstValueFrom(
+        this.clientProducts
+          .send<ProductFindAll>(PRODUCTS_GET_ONE, id)
+          .pipe(timeout(5000), handleObservableError(ProductsService.name)),
+      )
+    } catch (error) {
+      this.logger.error(`Error get one WITH ID ${id} PRODUCT IN DB-READ`, error)
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {

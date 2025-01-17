@@ -1,11 +1,9 @@
-// import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import * as dotenv from 'dotenv'
 import * as cookie from 'cookie-parser'
 import { ValidationPipe } from '@nestjs/common'
-// import { HttpExceptionFilter } from './common/catch.exception.filter'
 
 async function bootstrap() {
   dotenv.config({
@@ -33,6 +31,7 @@ async function bootstrap() {
     origin: [
       'http://192.168.1.29:3000',
       'https://master.dk87wm75w1xvx.amplifyapp.com',
+      'https://master.d2l2oxroeqqeuk.amplifyapp.com',
       'http://localhost:3000',
       '*',
     ],
@@ -50,7 +49,6 @@ async function bootstrap() {
       'Access-Control-Allow-Methods',
       'Access-Control-Allow-Credentials',
     ],
-    // allowedHeaders: ['Content-Type', 'Authorization'],
   })
 
   // forma de usar el exceptio filter de manera global
@@ -64,11 +62,6 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-      // errorHttpStatusCode: 400,
-      // transformOptions: { enableImplicitConversion: true },
-      // disableErrorMessages: false,
-      // validationError: { target: false },
-      // stopAtFirstError: true,
     }),
   )
 
