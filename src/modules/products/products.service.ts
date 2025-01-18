@@ -3,7 +3,11 @@ import { ClientProxy } from '@nestjs/microservices'
 import { firstValueFrom, timeout } from 'rxjs'
 import { ErrorHandlerService } from 'src/common/error-handler.service'
 import { handleObservableError } from 'src/common/handleObservableError'
-import { PRODUCTS_GET_ALL_READ, PRODUCTS_GET_ONE } from './common/patternRead'
+import {
+  PRODUCTS_GET_ALL_READ,
+  PRODUCTS_GET_ALL_READ_CLIENT,
+  PRODUCTS_GET_ONE,
+} from './common/patternRead'
 import {
   PRODUCTS_CREATE,
   PRODUCTS_CREATE_ONE_VARIANT,
@@ -71,6 +75,19 @@ export class ProductsService {
       ).then((data: ProductFindAll[]) => data)
     } catch (error) {
       this.logger.error('Error get all PRODUCTS IN DB-READ', error)
+      throw ErrorHandlerService.handleError(error, ProductsService.name)
+    }
+  }
+  async findAllClient() {
+    try {
+      // El segundo argumento es un objeto de configuración opcional.
+      return await firstValueFrom(
+        this.clientProducts
+          .send<ProductFindAllClient[]>(PRODUCTS_GET_ALL_READ_CLIENT, {})
+          .pipe(timeout(5000), handleObservableError(ProductsService.name)),
+      ).then((data: ProductFindAllClient[]) => data)
+    } catch (error) {
+      this.logger.error('Error get all PRODUCTS CLIENT IN DB-READ', error)
       throw ErrorHandlerService.handleError(error, ProductsService.name)
     }
   }

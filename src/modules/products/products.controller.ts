@@ -90,6 +90,10 @@ export class ProductsController {
   findAll() {
     return this.productsService.findAll()
   }
+  @Get('client')
+  findAllClient() {
+    return this.productsService.findAllClient()
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
