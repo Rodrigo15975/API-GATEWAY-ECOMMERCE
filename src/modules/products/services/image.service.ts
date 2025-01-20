@@ -20,15 +20,15 @@ import { ProductDto, ProductVariantDto } from '../../products/types/products'
 export class ImagesService {
   private readonly logger: Logger = new Logger(ImagesService.name)
   private readonly apiMicroservicesFiles: string = ''
-
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     @Inject(proxyName.name) private readonly clientProducts: ClientProxy,
   ) {
-    this.apiMicroservicesFiles = this.configService.getOrThrow(
-      'API_MICROSERVICES_FILES',
-    )
+    this.apiMicroservicesFiles =
+      process.env.NODE_ENV === 'production'
+        ? this.configService.getOrThrow('API_MICROSERVICES_FILES_PRODUCTION')
+        : this.configService.getOrThrow('API_MICROSERVICES_FILES_DEV')
   }
   private async findProductAll() {
     try {
