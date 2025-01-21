@@ -5,9 +5,8 @@ import * as dotenv from 'dotenv'
 import * as cookie from 'cookie-parser'
 import { ValidationPipe } from '@nestjs/common'
 
+dotenv.config()
 async function bootstrap() {
-  dotenv.config()
-
   const app = await NestFactory.create(AppModule)
   app.use(cookie())
 

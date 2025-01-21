@@ -10,7 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: '.env.example',
     }),
     RabbitMQModule.forRootAsync(RabbitMQModule, {
       useFactory: (configService: ConfigService) => ({
