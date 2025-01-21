@@ -51,10 +51,6 @@ export class ClientsService {
         timeout: 30000,
       })
     } catch (error) {
-      console.log({
-        error,
-      })
-
       this.logger.error('Error get one client', error)
       throw ErrorHandlerService.handleError(error, ClientsService.name)
     }
@@ -62,8 +58,8 @@ export class ClientsService {
   async findOneVerify(userIdGoogle: string, verify: boolean) {
     try {
       return await this.amqpConnection.request<FindOneClient>({
-        exchange: configPublish.ROUTING_EXCHANGE_GET_ONE_CLIENT,
-        routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ONE_CLIENT,
+        exchange: configPublish.ROUTING_ROUTINGKEY_GET_ONE_CLIENT_VERIFY,
+        routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ONE_CLIENT_VERIFY,
         payload: { userIdGoogle, verify },
         correlationId: this.randomUUID,
         timeout: 30000,
