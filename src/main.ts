@@ -6,12 +6,7 @@ import * as cookie from 'cookie-parser'
 import { ValidationPipe } from '@nestjs/common'
 
 async function bootstrap() {
-  dotenv.config({
-    path:
-      process.env.NODE_ENV === 'production'
-        ? '.env.production'
-        : '.env.development',
-  })
+  dotenv.config()
 
   const app = await NestFactory.create(AppModule)
   app.use(cookie())
@@ -27,7 +22,6 @@ async function bootstrap() {
   SwaggerModule.setup('api-gateway', app, document)
   app.enableCors({
     credentials: true,
-    // origin: true,
     origin: [
       'http://192.168.1.29:3000',
       'https://production.dctgtqj02tyd5.amplifyapp.com',
