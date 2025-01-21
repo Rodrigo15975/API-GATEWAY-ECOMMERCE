@@ -1,14 +1,14 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { ClientsService } from './clients.service'
-import { CreateClientDto } from './dto/create-client.dto'
+import { CreateReview } from './dto/create-client.dto'
 
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
-  @Post()
-  create(@Body() createClientDto: CreateClientDto) {
-    return this.clientsService.create(createClientDto)
+  @Post('review')
+  createReview(@Body() createNewReview: CreateReview) {
+    return this.clientsService.createNewView(createNewReview)
   }
 
   @Post(':idGoogle')

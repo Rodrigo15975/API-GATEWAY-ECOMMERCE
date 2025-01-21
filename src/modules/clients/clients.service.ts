@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { randomUUID } from 'crypto'
 import { ErrorHandlerService } from 'src/common/error-handler.service'
 import { configPublish } from './common/config-rabbitMQ'
-import { CreateClientDto } from './dto/create-client.dto'
+import { CreateReview } from './dto/create-client.dto'
 
 @Injectable()
 export class ClientsService {
@@ -11,9 +11,9 @@ export class ClientsService {
   private readonly randomUUID: string = randomUUID().toString()
   constructor(private readonly amqpConnection: AmqpConnection) {}
 
-  async create(createClientDto: CreateClientDto) {
+  async createNewView(createReview: CreateReview) {
     console.log({
-      createClientDto,
+      createReview,
     })
   }
   async createCuponIfUserNotExists(
