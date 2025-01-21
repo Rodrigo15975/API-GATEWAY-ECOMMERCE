@@ -25,10 +25,9 @@ export class ImagesService {
     private readonly configService: ConfigService,
     @Inject(proxyName.name) private readonly clientProducts: ClientProxy,
   ) {
-    this.apiMicroservicesFiles =
-      process.env.NODE_ENV === 'production'
-        ? this.configService.getOrThrow('API_MICROSERVICES_FILES_PRODUCTION')
-        : this.configService.getOrThrow('API_MICROSERVICES_FILES_DEV')
+    this.apiMicroservicesFiles = this.configService.getOrThrow(
+      'API_MICROSERVICES_FILES',
+    )
   }
   private async findProductAll() {
     try {
