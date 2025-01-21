@@ -30,8 +30,7 @@ async function bootstrap() {
     // origin: true,
     origin: [
       'http://192.168.1.29:3000',
-      'https://master.dk87wm75w1xvx.amplifyapp.com',
-      'https://master.d2l2oxroeqqeuk.amplifyapp.com',
+      'https://production.dctgtqj02tyd5.amplifyapp.com',
       'http://localhost:3000',
       '*',
     ],
