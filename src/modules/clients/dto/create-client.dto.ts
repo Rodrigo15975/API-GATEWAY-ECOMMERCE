@@ -7,17 +7,28 @@ export class CreateClientDto {
 
 export class CreateReview {
   @IsOptional()
-  id?: number
+  id?: string
+
   @IsNotEmpty({
     message: 'Rating is required',
   })
   rating: number
   @IsNotEmpty({
-    message: 'Review is required',
+    message: 'Comments is required',
   })
-  review: string
-  @IsOptional()
+  comments: string
+  @IsNotEmpty({
+    message: 'Username is required',
+  })
+  username: string
+
+  @IsNotEmpty({
+    message: 'UserId is required',
+  })
+  userId: string
+
+  @IsNotEmpty({
+    message: 'UserId is required',
+  })
   productId: number
-  @IsOptional()
-  userId: number
 }

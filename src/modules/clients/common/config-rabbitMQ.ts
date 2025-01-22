@@ -25,6 +25,9 @@ export const configPublish = {
 
   ROUTING_EXCHANGE_GET_ONE_CLIENT_VERIFY: 'client.get.one.client.verify',
   ROUTING_ROUTINGKEY_GET_ONE_CLIENT_VERIFY: 'client.get.one.client.verify',
+
+  ROUTING_EXCHANGE_CREATE_POST: 'client.create.post',
+  ROUTING_ROUTINGKEY_CREATE_POST: 'client.create.post',
 }
 
 // Siempre configurar esto si no te sale error internal server
@@ -34,6 +37,14 @@ export const configQueue: RabbitMQQueueConfig[] = [
     name: 'client.create.coupon',
     routingKey: 'client.create.coupon',
     exchange: 'client.create.coupon',
+    options: {
+      persistent: true,
+    },
+  },
+  {
+    name: 'client.create.post',
+    routingKey: 'client.create.post',
+    exchange: 'client.create.post',
     options: {
       persistent: true,
     },
@@ -78,6 +89,14 @@ export const configQueue: RabbitMQQueueConfig[] = [
 export const configExchange: RabbitMQExchangeConfig[] = [
   {
     name: 'client.create.coupon',
+    type: 'direct',
+    options: {
+      persistent: true,
+    },
+  },
+
+  {
+    name: 'client.create.post',
     type: 'direct',
     options: {
       persistent: true,

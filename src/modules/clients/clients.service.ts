@@ -12,9 +12,19 @@ export class ClientsService {
   constructor(private readonly amqpConnection: AmqpConnection) {}
 
   async createNewView(createReview: CreateReview) {
-    console.log({
-      createReview,
-    })
+    try {
+      this.logger.verbose(
+        `Message sent to: ${configPublish.ROUTING_EXCHANGE_CREATE_POST} `,
+      )
+      await this.amqpConnection.publish(
+        configPublish.ROUTING_EXCHANGE_CREATE_POST,
+        configPublish.ROUTING_ROUTINGKEY_CREATE_POST,
+        createReview,
+      )
+    } catch (error) {
+      this.logger.error('Error publish with create new view', error)
+      throw ErrorHandlerService.handleError(error, ClientsService.name)
+    }
   }
   async createCuponIfUserNotExists(
     userIdGoogle: string,
@@ -65,7 +75,7 @@ export class ClientsService {
         timeout: 30000,
       })
     } catch (error) {
-      console.log({
+      console.error({
         error,
       })
 
