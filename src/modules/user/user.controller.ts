@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpStatus,
-  // HttpStatus,
   Param,
   ParseIntPipe,
   Patch,

@@ -49,11 +49,6 @@ export class AppModule {
           path: 'clients(.*)',
           method: RequestMethod.ALL,
         },
-
-        // {
-        //   path: 'products(.*)',
-        //   method: RequestMethod.GET,
-        // },
       )
       .forRoutes('*')
   }
