@@ -23,6 +23,13 @@ export class ClientsController {
       nameGoogle,
     )
   }
+  @Get('coupon/:idGoogle/:coupon')
+  findOneCouponClient(
+    @Param('idGoogle') idGoogle: string,
+    @Param('coupon') coupon: string,
+  ) {
+    return this.clientsService.findOneCouponClient(idGoogle, coupon)
+  }
 
   @Get()
   findAll() {

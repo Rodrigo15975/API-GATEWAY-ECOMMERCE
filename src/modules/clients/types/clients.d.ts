@@ -18,6 +18,5 @@ interface FindOneClient {
   userIdGoogle: string
   emailGoogle: string
   nameGoogle: string
-
   coupon: Coupon
 }

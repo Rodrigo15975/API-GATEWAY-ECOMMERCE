@@ -11,6 +11,25 @@ export class ClientsService {
   private readonly randomUUID: string = randomUUID().toString()
   constructor(private readonly amqpConnection: AmqpConnection) {}
 
+  async findOneCouponClient(userIdGoogle: string, code: string) {
+    if (!userIdGoogle || !code) return
+    try {
+      return await this.amqpConnection.request({
+        exchange: configPublish.ROUTING_EXCHANGE_VERIFY_COUPON_COUDE,
+        routingKey: configPublish.ROUTING_ROUTINGKEY_VERIFY_COUPON_COUDE,
+        payload: {
+          code,
+          userIdGoogle,
+        },
+        correlationId: this.randomUUID,
+        timeout: 30000,
+      })
+    } catch (error) {
+      this.logger.error('Error get one client coupon', error)
+      throw ErrorHandlerService.handleError(error, ClientsService.name)
+    }
+  }
+
   async createNewView(createReview: CreateReview) {
     try {
       this.logger.verbose(

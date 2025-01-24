@@ -9,6 +9,9 @@ import {
 // Headers: Cuando el enrutamiento depende de múltiples propiedades o valores en los encabezados.
 
 export const configPublish = {
+  ROUTING_EXCHANGE_VERIFY_COUPON_COUDE: 'client.verify.code.discount',
+  ROUTING_ROUTINGKEY_VERIFY_COUPON_COUDE: 'client.verify.code.discount',
+
   ROUTING_EXCHANGE_CREATE_COUPON: 'client.create.coupon',
   ROUTING_ROUTINGKEY_CREATE_COUPON: 'client.create.coupon',
 
@@ -33,6 +36,15 @@ export const configPublish = {
 // Siempre configurar esto si no te sale error internal server
 //  para el module IMPORTANTE
 export const configQueue: RabbitMQQueueConfig[] = [
+  {
+    name: 'client.verify.code.discount',
+    routingKey: 'client.verify.code.discount',
+    exchange: 'client.verify.code.discount',
+    options: {
+      persistent: true,
+    },
+  },
+
   {
     name: 'client.create.coupon',
     routingKey: 'client.create.coupon',
@@ -87,6 +99,14 @@ export const configQueue: RabbitMQQueueConfig[] = [
 ]
 
 export const configExchange: RabbitMQExchangeConfig[] = [
+  {
+    name: 'client.verify.code.discount',
+    type: 'direct',
+    options: {
+      persistent: true,
+    },
+  },
+
   {
     name: 'client.create.coupon',
     type: 'direct',
