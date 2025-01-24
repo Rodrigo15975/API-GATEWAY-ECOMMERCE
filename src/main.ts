@@ -7,7 +7,9 @@ import { ValidationPipe } from '@nestjs/common'
 
 dotenv.config()
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+  })
   app.use(cookie())
 
   const config = new DocumentBuilder()
@@ -22,7 +24,6 @@ async function bootstrap() {
   app.enableCors({
     credentials: true,
     origin: [
-      'http://192.168.1.29:3000',
       'https://production.dctgtqj02tyd5.amplifyapp.com',
       'http://localhost:3000',
       '*',
