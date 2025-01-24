@@ -58,7 +58,18 @@ async function bootstrap() {
   )
 
   await app.listen(port, () => {
-    console.log('listening on port ' + port)
+    if (process.env.NODE_ENV === 'development')
+      return console.log(
+        'listening on port:',
+        port,
+        `\nNODE_ENV: ${process.env.NODE_ENV} `,
+      )
+    console.log(
+      'listening on port:',
+      port,
+      `\nNODE_ENV: ${process.env.NODE_ENV} `,
+    )
   })
 }
+
 bootstrap()
