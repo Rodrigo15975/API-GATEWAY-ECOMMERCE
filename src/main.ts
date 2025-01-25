@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import * as dotenv from 'dotenv'
 import * as cookie from 'cookie-parser'
-import { ValidationPipe } from '@nestjs/common'
+import { Logger, ValidationPipe } from '@nestjs/common'
 
 dotenv.config()
 async function bootstrap() {
@@ -21,6 +21,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api-gateway', app, document)
+  Logger.debug('Configuration CORS...')
   app.enableCors({
     credentials: true,
     origin: [
@@ -43,6 +44,7 @@ async function bootstrap() {
       'Access-Control-Allow-Credentials',
     ],
   })
+  Logger.debug('Configuration CORS completed.')
 
   // forma de usar el exceptio filter de manera global
   // tambien lo puedes usar en el controller solitario
@@ -60,16 +62,10 @@ async function bootstrap() {
 
   await app.listen(port, () => {
     if (process.env.NODE_ENV === 'development')
-      return console.log(
-        'listening on port:',
-        port,
-        `\nNODE_ENV: ${process.env.NODE_ENV} `,
+      return Logger.verbose(
+        `Server listening  on port ${port} in mode ${process.env.NODE_ENV}`,
       )
-    console.log(
-      'listening on port:',
-      port,
-      `\nNODE_ENV: ${process.env.NODE_ENV} `,
-    )
+    Logger.log('listening on port:', port, `NODE_ENV: ${process.env.NODE_ENV} `)
   })
 }
 

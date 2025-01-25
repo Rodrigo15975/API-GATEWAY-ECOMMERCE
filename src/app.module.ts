@@ -51,6 +51,10 @@ export class AppModule {
           path: 'clients(.*)',
           method: RequestMethod.ALL,
         },
+        {
+          path: 'payment(.*)',
+          method: RequestMethod.ALL,
+        },
       )
       .forRoutes('*')
   }
