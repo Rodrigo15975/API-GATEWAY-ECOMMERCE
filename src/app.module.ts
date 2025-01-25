@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module'
 import { AuthMiddleware } from './middleware/auth.middleware'
 import { CronJobModule } from './modules/cron-job/cron-job.module'
 import { ClientsModule } from './modules/clients/clients.module'
+import { PaymentModule } from './modules/payment/payment.module'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ClientsModule } from './modules/clients/clients.module'
     CouponModule,
     CronJobModule,
     ClientsModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [],
