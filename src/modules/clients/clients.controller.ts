@@ -1,4 +1,17 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common'
+import {
+  ApiAcceptedResponse,
+  ApiOkResponse,
+  ApiResponse,
+} from '@nestjs/swagger'
 import { ClientsService } from './clients.service'
 import { CreateReview } from './dto/create-client.dto'
 
@@ -6,11 +19,19 @@ import { CreateReview } from './dto/create-client.dto'
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The record has been successfully created.',
+  })
   @Post('review')
   createReview(@Body() createNewReview: CreateReview) {
     return this.clientsService.createNewView(createNewReview)
   }
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The record has been successfully created.',
+  })
   @Post(':idGoogle')
   createCuponIfClientNotExists(
     @Param('idGoogle') idGoogle: string,
@@ -23,6 +44,11 @@ export class ClientsController {
       nameGoogle,
     )
   }
+
+  @ApiAcceptedResponse({
+    description: 'The record has been successfully updated.',
+    status: HttpStatus.ACCEPTED,
+  })
   @Get('coupon/:idGoogle/:coupon')
   findOneCouponClient(
     @Param('idGoogle') idGoogle: string,
@@ -31,6 +57,10 @@ export class ClientsController {
     return this.clientsService.findOneCouponClient(idGoogle, coupon)
   }
 
+  @ApiOkResponse({
+    description: 'The record has been successfully updated.',
+    status: HttpStatus.OK,
+  })
   @Get()
   findAll() {
     return this.clientsService.findAll()
