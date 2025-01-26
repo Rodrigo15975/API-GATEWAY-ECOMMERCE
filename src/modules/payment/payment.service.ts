@@ -1,12 +1,38 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { CreatePaymentDto } from './dto/create-payment.dto'
 import { UpdatePaymentDto } from './dto/update-payment.dto'
-
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq'
+import { ErrorHandlerService } from 'src/common/error-handler.service'
+import { randomUUID } from 'crypto'
+import { configRabbit } from './common/config-rabbit'
+import { gettingDataformatRight } from './utils/GettingDataformatRight'
 @Injectable()
 export class PaymentService {
-  create(createPaymentDto: CreatePaymentDto) {
-    console.log(createPaymentDto)
-    return 'This action adds a new payment'
+  private timeOut = randomUUID().toString()
+  private readonly logger: Logger = new Logger(PaymentService.name)
+  constructor(private readonly amqConnection: AmqpConnection) {}
+
+  async create(
+    createPaymentDto: CreatePaymentDto[],
+    totalPrice: number,
+    emailUser: string,
+    idUser: string,
+  ) {
+    const dataFormat = gettingDataformatRight(createPaymentDto)
+
+    try {
+      return await this.amqConnection.request({
+        exchange: configRabbit.ROUTING_EXCHANGE_CREATE_PAYMENT,
+        routingKey: configRabbit.ROUTING_ROUTINGKEY_CREATE_PAYMENT,
+        payload: { dataFormat, totalPrice, emailUser, idUser },
+        correlationId: this.timeOut,
+        expiration: 30000,
+        timeout: 30000,
+      })
+    } catch (error) {
+      this.logger.error('Error create payment: ', error)
+      throw ErrorHandlerService.handleError(error, PaymentService.name)
+    }
   }
 
   findAll() {
