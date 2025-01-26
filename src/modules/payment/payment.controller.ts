@@ -1,16 +1,15 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  ParseIntPipe,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common'
-import { PaymentService } from './payment.service'
 import { CreatePaymentDto } from './dto/create-payment.dto'
 import { UpdatePaymentDto } from './dto/update-payment.dto'
+import { PaymentService } from './payment.service'
 
 @Controller('payment')
 export class PaymentController {
@@ -19,7 +18,7 @@ export class PaymentController {
   @Post('/:totalPrice/:emailUser/:idUser')
   create(
     @Body() createPaymentDto: CreatePaymentDto[],
-    @Param('totalPrice', ParseIntPipe) totalPrice: number,
+    @Param('totalPrice') totalPrice: number,
     @Param('emailUser') emailUser: string,
     @Param('idUser') idUser: string,
   ) {
