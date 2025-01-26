@@ -9,7 +9,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 @Module({
   imports: [
     ConfigModule.forRoot({
+      cache: true,
       isGlobal: true,
+      envFilePath:
+        process.env.NODE_ENV === 'development'
+          ? '.env.development'
+          : '.env.production',
     }),
     ClientsModule.registerAsync([
       {
