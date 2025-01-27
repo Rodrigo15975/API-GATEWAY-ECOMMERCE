@@ -7,6 +7,7 @@ import { AuthModule } from '../auth/auth.module'
 import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data'
 import { HttpModule } from '@nestjs/axios'
 import { ImagesService } from './services/image.service'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
@@ -15,23 +16,33 @@ import { ImagesService } from './services/image.service'
     NestjsFormDataModule.config({
       storage: MemoryStoredFile,
     }),
-
-    ClientsModule.register([
+    ConfigModule.forRoot({
+      cache: true,
+      isGlobal: true,
+      envFilePath:
+        process.env.NODE_ENV === 'development'
+          ? '.env.development'
+          : '.env.production',
+    }),
+    ClientsModule.registerAsync([
       {
+        imports: [ConfigModule],
+        inject: [ConfigService],
         name: proxyName.name,
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: 6379,
-          // Establece el tiempo máximo para una solicitud de comando Redis antes de que se considere que ha fallado.
-          commandTimeout: 5000,
-          // Define el tiempo máximo para que el cliente de Redis se conecte al servidor.
-          connectTimeout: 5000,
-          // Establece el tiempo máximo para que el cliente de Redis se desconecte del servidor.
-          // disconnectTimeout: 5000,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.REDIS,
+          options: {
+            host: configService.getOrThrow('REDIS_HOST'),
+            port: configService.getOrThrow('REDIS_PORT'),
+            retryAttempts: 3,
+            retryDelay: 10000,
+            connectTimeout: 5000,
+          },
+        }),
       },
     ]),
+
+    // ]),
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ImagesService],

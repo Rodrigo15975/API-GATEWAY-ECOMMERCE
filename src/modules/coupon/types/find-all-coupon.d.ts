@@ -4,8 +4,8 @@ interface FindAllCoupon {
   createdAt: string
   discount: number
   espiryDate: string
-  isGlobal: false
-  isNew: true
+  isGlobal: boolean
+  isNew: boolean
   products: {
     id: number
     product: string

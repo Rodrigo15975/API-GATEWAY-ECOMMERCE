@@ -24,11 +24,12 @@ export const InitApp = async (app: INestApplication<any>) => {
   Logger.debug('Configuration CORS...')
   app.enableCors({
     credentials: true,
-    origin: [
-      'https://production.dctgtqj02tyd5.amplifyapp.com',
-      'http://localhost:3000',
-      '*',
-    ],
+    // origin: [
+    //   'https://production.dctgtqj02tyd5.amplifyapp.com',
+    //   'http://localhost:3000',
+    //   '*',
+    // ],
+    origin: true,
     exposedHeaders: [
       'Set-Cookie',
       'Authorization',

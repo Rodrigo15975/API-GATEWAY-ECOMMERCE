@@ -67,7 +67,6 @@ export class ProductsService {
 
   async findAll() {
     try {
-      // El segundo argumento es un objeto de configuración opcional.
       return await firstValueFrom(
         this.clientProducts
           .send<ProductFindAll[]>(PRODUCTS_GET_ALL_READ, {})
@@ -80,7 +79,6 @@ export class ProductsService {
   }
   async findAllClient() {
     try {
-      // El segundo argumento es un objeto de configuración opcional.
       return await firstValueFrom(
         this.clientProducts
           .send<ProductFindAllClient[]>(PRODUCTS_GET_ALL_READ_CLIENT, {})

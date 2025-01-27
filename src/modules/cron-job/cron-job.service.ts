@@ -90,7 +90,10 @@ export class CronJobService {
         expiredDateVerification(coupon.espiryDate),
       )
       if (findOneCoupon) {
-        const addVerification = { ...findOneCoupon, isExpiredDate: true }
+        const addVerification: FindAllCoupon = {
+          ...findOneCoupon,
+          isExpiredDate: true,
+        }
         await this.couponService.verifyCouponDateExpired(addVerification)
         this.logger.log('Finish verification discount coupon  ')
       }
