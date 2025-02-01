@@ -14,6 +14,7 @@ export const gettingDataformatRight = (data: CreatePaymentDto[]) => {
         productVariant,
         size,
         id,
+        description,
       }) => ({
         product,
         brand,
@@ -25,6 +26,7 @@ export const gettingDataformatRight = (data: CreatePaymentDto[]) => {
         productVariant,
         size,
         id,
+        description,
       }),
     )
     return dataCorrect
