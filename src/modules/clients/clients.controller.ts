@@ -19,6 +19,11 @@ import { CreateReview } from './dto/create-client.dto'
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
+  @Get('ordersClient/:idGoogle')
+  async ordersClientByUseId(@Param('idGoogle') idGoogle: string) {
+    return await this.clientsService.ordersClientByUseId(idGoogle)
+  }
+
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The record has been successfully created.',
