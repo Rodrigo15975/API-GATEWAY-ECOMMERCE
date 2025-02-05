@@ -17,7 +17,7 @@ export class ClientsService {
         exchange: configPublish.ROUTING_EXCHANGE_GET_ALL_ORDERS_CLIENT_ID,
         routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ALL_ORDERS_CLIENT_ID,
         payload: userIdGoogle,
-        correlationId: this.randomUUID,
+        correlationId: `${this.randomUUID}-${userIdGoogle}-orders-client-id`,
         timeout: 30000,
         expiration: 30000,
       })
