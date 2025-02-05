@@ -48,14 +48,6 @@ export class ClientsService {
 
   async successPayment() {
     try {
-      // const paymentSucces = await this.amqpConnection.request({
-      //   exchange: configPublish.ROUTING_EXCHANGE_SUCCESS_PAYMENT,
-      //   routingKey: configPublish.ROUTING_ROUTINGKEY_SUCCESS_PAYMENT,
-      //   payload: {},
-      //   correlationId: this.randomUUID,
-      //   timeout: 30000,
-      // })
-      // this.logger.debug(paymentSucces)
     } catch (error) {
       this.logger.error('Error get one client coupon', error)
       throw ErrorHandlerService.handleError(error, ClientsService.name)
