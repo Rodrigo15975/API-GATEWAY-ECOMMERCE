@@ -17,6 +17,7 @@ export class PaymentService {
     totalPrice: number,
     emailUser: string,
     idUser: string,
+    codeUsed: boolean,
   ) {
     const dataFormat = gettingDataformatRight(createPaymentDto)
 
@@ -24,7 +25,7 @@ export class PaymentService {
       return await this.amqConnection.request({
         exchange: configRabbit.ROUTING_EXCHANGE_CREATE_PAYMENT,
         routingKey: configRabbit.ROUTING_ROUTINGKEY_CREATE_PAYMENT,
-        payload: { dataFormat, totalPrice, emailUser, idUser },
+        payload: { dataFormat, totalPrice, emailUser, idUser, codeUsed },
         correlationId: this.timeOut,
         expiration: 30000,
         timeout: 30000,
