@@ -11,24 +11,38 @@ export const gettingDataformatRight = (data: CreatePaymentDto[]) => {
         discount,
         price,
         gender,
-        productVariant,
+        productVariant, // Este es un array
         size,
         id,
         description,
-      }) => ({
-        product,
-        brand,
-        quantity_buy,
-        category,
-        discount,
-        price,
-        gender,
-        productVariant,
-        size,
-        id,
-        description,
-      }),
+      }) => {
+        const flattenedProductVariant = Array.isArray(productVariant)
+          ? productVariant.flat()
+          : []
+
+        const formattedProductVariant = flattenedProductVariant.map(
+          (variant) => ({
+            color: variant.color,
+            url: variant.url,
+          }),
+        )
+
+        return {
+          product,
+          brand,
+          quantity_buy,
+          category,
+          discount,
+          price,
+          gender,
+          productVariant: formattedProductVariant, // Array de objetos con `color` y `url`
+          size,
+          id,
+          description,
+        }
+      },
     )
+
     return dataCorrect
   }
 }
