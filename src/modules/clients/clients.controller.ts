@@ -45,6 +45,11 @@ export class ClientsController {
     )
   }
 
+  @Get('successPayment')
+  successPayment() {
+    return this.clientsService.successPayment()
+  }
+
   @ApiAcceptedResponse({
     description: 'The record has been successfully updated.',
     status: HttpStatus.ACCEPTED,
