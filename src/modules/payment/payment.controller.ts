@@ -15,18 +15,20 @@ import { PaymentService } from './payment.service'
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @Post('/:totalPrice/:emailUser/:idUser')
+  @Post('/:totalPrice/:emailUser/:idUser/:codeUsed')
   create(
     @Body() createPaymentDto: CreatePaymentDto[],
     @Param('totalPrice') totalPrice: number,
     @Param('emailUser') emailUser: string,
     @Param('idUser') idUser: string,
+    @Param('codeUsed') codeUsed: boolean,
   ) {
     return this.paymentService.create(
       createPaymentDto,
       totalPrice,
       emailUser,
       idUser,
+      codeUsed,
     )
   }
 
