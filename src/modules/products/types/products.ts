@@ -11,12 +11,7 @@ import {
   IsOptional,
   ValidateNested,
 } from 'class-validator'
-import {
-  MemoryStoredFile,
-  // HasMimeType,
-  IsFile,
-  // MaxFileSize,
-} from 'nestjs-form-data'
+import { MemoryStoredFile, IsFile } from 'nestjs-form-data'
 
 export class ProductVariantDto {
   @IsNotEmpty({ message: 'Color is required' })
@@ -24,7 +19,7 @@ export class ProductVariantDto {
   color: string
 
   @ApiProperty({ type: 'binary' })
-  @IsOptional() // Permite que la propiedad sea opcional o null
+  @IsOptional()
   @IsFile({ message: 'The file must be an archive' })
   // @MaxFileSize(1e6, { message: 'The maximum allowed size is 1MB' })
   // @HasMimeType(['image/jpeg', 'image/png'], {
