@@ -11,6 +11,22 @@ export class ClientsService {
   private readonly randomUUID: string = randomUUID().toString()
   constructor(private readonly amqpConnection: AmqpConnection) {}
 
+  async ordersClientByUseId(userIdGoogle: string) {
+    try {
+      return await this.amqpConnection.request({
+        exchange: configPublish.ROUTING_EXCHANGE_GET_ALL_ORDERS_CLIENT_ID,
+        routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ALL_ORDERS_CLIENT_ID,
+        payload: userIdGoogle,
+        correlationId: this.randomUUID,
+        timeout: 30000,
+        expiration: 30000,
+      })
+    } catch (error) {
+      this.logger.error('Error get one client', error)
+      throw ErrorHandlerService.handleError(error, ClientsService.name)
+    }
+  }
+
   async findOneCouponClient(userIdGoogle: string, code: string) {
     if (!userIdGoogle || !code) return
     try {
