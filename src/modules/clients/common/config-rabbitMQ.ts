@@ -15,6 +15,11 @@ export const configPublish = {
   ROUTING_EXCHANGE_CREATE_COUPON: 'client.create.coupon',
   ROUTING_ROUTINGKEY_CREATE_COUPON: 'client.create.coupon',
 
+  ROUTING_EXCHANGE_GET_ALL_ORDERS_CLIENT_ID: 'client.get.all.orders.client.id',
+  ROUTING_ROUTINGKEY_GET_ALL_ORDERS_CLIENT_ID:
+    'client.get.all.orders.client.id',
+  ROUTING_QUEUE_GET_ALL_ORDERS_CLIENT_ID: 'client.get.all.orders.client.id',
+
   ROUTING_EXCHANGE_UPDATE_EXPIRY_DATE_COUPON:
     'client.update.expiry.date.coupon',
   ROUTING_ROUTINGKEY_UPDATE_EXPIRY_DATE_COUPON:
@@ -36,6 +41,15 @@ export const configPublish = {
 // Siempre configurar esto si no te sale error internal server
 //  para el module IMPORTANTE
 export const configQueue: RabbitMQQueueConfig[] = [
+  {
+    name: configPublish.ROUTING_QUEUE_GET_ALL_ORDERS_CLIENT_ID,
+    routingKey: configPublish.ROUTING_ROUTINGKEY_GET_ALL_ORDERS_CLIENT_ID,
+    exchange: configPublish.ROUTING_EXCHANGE_GET_ALL_ORDERS_CLIENT_ID,
+    options: {
+      durable: true,
+      // expires: 60000,
+    },
+  },
   {
     name: 'client.verify.code.discount',
     routingKey: 'client.verify.code.discount',
@@ -99,6 +113,13 @@ export const configQueue: RabbitMQQueueConfig[] = [
 ]
 
 export const configExchange: RabbitMQExchangeConfig[] = [
+  {
+    name: configPublish.ROUTING_EXCHANGE_GET_ALL_ORDERS_CLIENT_ID,
+    type: 'direct',
+    options: {
+      durable: true,
+    },
+  },
   {
     name: 'client.verify.code.discount',
     type: 'direct',
