@@ -12,7 +12,7 @@ import { AuthService } from 'src/modules/auth/auth.service'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  private readonly url_client = process.env.URL_CLIENT
+  private readonly url_client = process.env.URL_CLIENT || 'localhost'
   constructor(
     private readonly reflector: Reflector,
     private readonly authService: AuthService,
