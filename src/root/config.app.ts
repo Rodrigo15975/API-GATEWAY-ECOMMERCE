@@ -29,7 +29,6 @@ export const InitApp = async (app: INestApplication<any>) => {
   Logger.debug('Configuration CORS...')
   app.enableCors({
     credentials: true,
-
     origin: true,
     exposedHeaders: [
       'Set-Cookie',
@@ -53,14 +52,17 @@ export const InitApp = async (app: INestApplication<any>) => {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-      // transformOptions: { enableImplicitConversion: true },
     }),
   )
   await app.listen(port, () => {
     if (process.env.NODE_ENV === 'development')
       return Logger.verbose(
-        `Server listening  on port ${port} in mode ${process.env.NODE_ENV}`,
+        `Server Api-Gateway listening  on port ${port} in mode ${process.env.NODE_ENV}`,
       )
-    Logger.log('listening on port:', port, `NODE_ENV: ${process.env.NODE_ENV} `)
+    Logger.log(
+      'Server Api-Gateway listening  on port',
+      port,
+      `NODE_ENV: ${process.env.NODE_ENV} `,
+    )
   })
 }
