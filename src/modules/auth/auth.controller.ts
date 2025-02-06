@@ -27,24 +27,26 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const auth = await this.authService.signIn(data)
-    // DEV
-    res.cookie('auth', auth, {
-      sameSite: 'lax',
-      secure: true,
-      httpOnly: true,
-    })
-
-    // // PRO
-    // // const isProduction = process.env.NODE_ENV === 'production'
-    // res.cookie('auth', auth, {
-    //   // si pones en true, una vez actualizada la pagina en el front
-    //   // se pierde las cookies sale undefined
-    //   // sameSite: isProduction ? 'none' : 'lax', // SameSite=None solo para producción
-    //   sameSite: 'none', // SameSite=None solo para producción
-    //   // secure: isProduction, // Secure=true solo en producción (HTTPS)
-    //   secure: true, // Secure=true solo en producción (HTTPS)
-    //   httpOnly: true,
-    // })
+    const isProduction = process.env.NODE_ENV === 'production'
+    if (isProduction) {
+      // // PRO
+      res.cookie('auth', auth, {
+        // si pones en true, una vez actualizada la pagina en el front
+        // se pierde las cookies sale undefined
+        // sameSite: isProduction ? 'none' : 'lax', // SameSite=None solo para producción
+        sameSite: 'none', // SameSite=None solo para producción
+        // secure: isProduction, // Secure=true solo en producción (HTTPS)
+        secure: true, // Secure=true solo en producción (HTTPS)
+        httpOnly: true,
+      })
+    } else {
+      // DEV
+      res.cookie('auth', auth, {
+        sameSite: 'lax',
+        secure: true,
+        httpOnly: true,
+      })
+    }
 
     res.send({ auth, statusCode: HttpStatus.OK })
   }
