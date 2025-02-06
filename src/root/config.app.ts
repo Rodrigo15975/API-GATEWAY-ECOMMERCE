@@ -3,13 +3,18 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as cookie from 'cookie-parser'
 import * as dotenv from 'dotenv'
 
-dotenv.config()
+dotenv.config({
+  path:
+    process.env.NODE_ENV === 'production'
+      ? '.env.production'
+      : '.env.development',
+})
 export const InitApp = async (app: INestApplication<any>) => {
   app.use(cookie())
 
   app.useLogger(
     process.env.NODE_ENV === 'production'
-      ? ['error', 'warn']
+      ? ['error', 'warn', 'log']
       : ['log', 'error', 'warn', 'debug', 'verbose'],
   )
   const config = new DocumentBuilder()
@@ -24,11 +29,7 @@ export const InitApp = async (app: INestApplication<any>) => {
   Logger.debug('Configuration CORS...')
   app.enableCors({
     credentials: true,
-    // origin: [
-    //   'https://production.dctgtqj02tyd5.amplifyapp.com',
-    //   'http://localhost:3000',
-    //   '*',
-    // ],
+
     origin: true,
     exposedHeaders: [
       'Set-Cookie',

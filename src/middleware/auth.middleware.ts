@@ -25,6 +25,6 @@ export class AuthMiddleware implements NestMiddleware {
       throw new BadRequestException(error)
     }
 
-    next() // continuar a la siguiente función middleware o controlador
+    next()
   }
 }
