@@ -20,6 +20,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         uri: configService.getOrThrow('RABBITMQ_URL'),
         exchanges: configExchange,
         queues: configQueue,
+        connectionInitOptions: {
+          timeout: 25000,
+          wait: true,
+        },
+        connectionManagerOptions: {
+          reconnectTimeInSeconds: 2,
+        },
       }),
       inject: [ConfigService],
     }),
