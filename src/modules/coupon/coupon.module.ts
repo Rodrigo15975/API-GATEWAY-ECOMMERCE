@@ -27,8 +27,10 @@ import { CategoryModule } from '../category/category.module'
         useFactory: (configService: ConfigService) => ({
           transport: Transport.REDIS,
           options: {
-            host: configService.getOrThrow('REDIS_HOST'),
             port: configService.getOrThrow('REDIS_PORT'),
+            host: configService.getOrThrow('REDIS_HOST'),
+            password: configService.getOrThrow('REDIS_PASSWORD'),
+            tls: { servername: configService.getOrThrow('REDIS_HOST') },
             retryAttempts: 3,
             retryDelay: 10000,
           },
