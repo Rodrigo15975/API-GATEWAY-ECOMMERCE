@@ -25,6 +25,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
           options: {
             port: configService.getOrThrow('REDIS_PORT'),
             host: configService.getOrThrow('REDIS_HOST'),
+            password: configService.getOrThrow('REDIS_PASSWORD'),
+            tls: { servername: configService.getOrThrow('REDIS_HOST') },
           },
         }),
         inject: [ConfigService],
@@ -37,6 +39,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
           options: {
             port: configService.getOrThrow('REDIS_PORT'),
             host: configService.getOrThrow('REDIS_HOST'),
+            password: configService.getOrThrow('REDIS_PASSWORD'),
+            tls: { servername: configService.getOrThrow('REDIS_HOST') },
             retryAttempts: 3,
             retryDelay: 10000,
             reconnectOnError: (error) => {
