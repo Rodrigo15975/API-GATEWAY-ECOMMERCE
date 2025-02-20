@@ -1,15 +1,35 @@
-FROM node:20-alpine
+FROM node:20-alpine As development
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY --chown=node:node  package*.json ./
+RUN npm ci 
+COPY --chown=node:node . .
 
-RUN npm i
+USER node
 
-COPY . .
+
+## Building the production image
+FROM node:20-alpine As build
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node . .
 
 RUN npm run build
+ENV NODE_ENV=production
+RUN npm ci --omit=production && npm cache clean --force
 
-EXPOSE 4000
+USER node
+#################################
 
-CMD ["npm", "run", "start:prod"]
+## Building the production image
+## Production
+FROM node:20-alpine As production
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/package*.json ./package*.json
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+CMD ["npm","run", "start:prod"]
+

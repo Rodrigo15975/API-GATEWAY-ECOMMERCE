@@ -14,8 +14,10 @@ import { ConfigService } from '@nestjs/config'
         useFactory: (configService: ConfigService) => ({
           transport: Transport.REDIS,
           options: {
-            host: configService.getOrThrow('REDIS_HOST'),
             port: configService.getOrThrow('REDIS_PORT'),
+            host: configService.getOrThrow('REDIS_HOST'),
+            password: configService.getOrThrow('REDIS_PASSWORD'),
+            tls: { servername: configService.getOrThrow('REDIS_HOST') },
             retryAttempts: 10,
             retryDelay: 10000,
             maxLoadingRetryTime: 90000,
