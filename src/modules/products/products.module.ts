@@ -32,8 +32,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         useFactory: (configService: ConfigService) => ({
           transport: Transport.REDIS,
           options: {
-            host: configService.getOrThrow('REDIS_HOST'),
             port: configService.getOrThrow('REDIS_PORT'),
+            host: configService.getOrThrow('REDIS_HOST'),
+            password: configService.getOrThrow('REDIS_PASSWORD'),
+            tls: { servername: configService.getOrThrow('REDIS_HOST') },
             retryAttempts: 3,
             retryDelay: 10000,
             connectTimeout: 5000,
@@ -41,8 +43,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         }),
       },
     ]),
-
-    // ]),
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ImagesService],
